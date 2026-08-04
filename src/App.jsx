@@ -530,17 +530,45 @@ function Hero() {
 
 /* ==================== 关于我 ==================== */
 function About({ stats }) {
+  const strengths = [
+    { icon: '▣', text: '从 0 到 1 构建百亿级数据规模的 SaaS 平台' },
+    { icon: '⬡', text: 'DDD 领域驱动设计的深度实践者与落地推动者' },
+    { icon: '⇄', text: '主导多次 C++ 遗留系统到 Java 微服务架构的平滑重构' },
+    { icon: '⟡', text: '以 AI Coding 赋能团队，持续提升交付效能' },
+  ]
+
+  const keywords = ['Spring Cloud', '微服务治理', '分布式系统', '高并发', '性能调优', '金融科技', '百亿级数据']
+
   return (
     <section id="about" className="relative py-20 md:py-28">
       <div className="max-w-6xl mx-auto px-6 relative z-10">
         <SectionTitle subtitle="ABOUT" title="自我评价" />
 
-        <div className="grid md:grid-cols-2 gap-6 items-start">
-          {/* 左侧文字 */}
-          <div className="sci-card p-7 md:p-9" data-reveal>
+        <div className="grid md:grid-cols-5 gap-6 items-stretch">
+          {/* 左侧：自我介绍（3/5） */}
+          <div className="md:col-span-3 sci-card p-7 md:p-9 flex flex-col" data-reveal>
+            {/* 档案元信息 */}
+            <div className="flex flex-wrap gap-2 mb-6">
+              {[
+                { label: '地区', value: '深圳' },
+                { label: '经验', value: '12 年' },
+                { label: '方向', value: 'Java 后端 · 金融科技' },
+              ].map((m) => (
+                <span key={m.label} className="glass-pill inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full">
+                  <span className="text-[10px] font-mono uppercase tracking-wider"
+                    style={{ color: 'var(--text-muted)' }}>
+                    {m.label}
+                  </span>
+                  <span className="text-xs font-medium" style={{ color: 'var(--text-primary)' }}>
+                    {m.value}
+                  </span>
+                </span>
+              ))}
+            </div>
+
             <p className="text-[#a7abb8] text-base leading-relaxed mb-5">
-              <strong className="gradient-text" style={{ WebkitTextFillColor: 'var(--cyan)' }}>12 年</strong>{' '}
-              Java 后端开发经验，具备技术架构设计、团队核心开发与跨系统项目管理等综合能力。
+              <strong style={{ color: 'var(--cyan)' }}>12 年</strong> Java 后端开发经验，具备
+              技术架构设计、团队核心开发与跨系统项目管理等综合能力。
             </p>
             <p className="text-[#a7abb8] text-base leading-relaxed mb-5">
               擅长将 <strong style={{ color: 'var(--text-primary)' }}>DDD 设计理念</strong> 落地于
@@ -551,21 +579,55 @@ function About({ stats }) {
               持有公司 <strong style={{ color: 'var(--text-primary)' }}>"性能优化奖"</strong> 与
               <strong style={{ color: 'var(--text-primary)' }}>"文化先锋"</strong> 荣誉。
             </p>
+
+            {/* 核心优势 */}
+            <div className="mt-6 pt-5 flex-1" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+              <div className="text-xs font-semibold tracking-widest uppercase mb-3"
+                style={{ color: 'var(--cyan)' }}>
+                ✦ 核心优势
+              </div>
+              <ul className="space-y-2.5">
+                {strengths.map((s, i) => (
+                  <li key={i} className="flex items-start gap-3 text-sm"
+                    style={{ color: 'var(--text-secondary)' }}>
+                    <span className="gradient-text mt-0.5 flex-shrink-0" style={{ fontSize: '0.9rem' }}>
+                      {s.icon}
+                    </span>
+                    <span>{s.text}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
 
-          {/* 右侧统计 */}
-          <div className="grid grid-cols-2 gap-4">
-            {stats.map((stat, i) => (
-              <div key={stat.label} className="sci-card p-6 text-center"
-                data-reveal style={{ '--reveal-delay': `${i * 100}ms` }}>
-                <div className="sci-stat-value">
-                  <CountUp value={stat.value} unit={stat.unit} />
+          {/* 右侧：统计 + 技术关键词（2/5） */}
+          <div className="md:col-span-2 flex flex-col gap-4">
+            <div className="grid grid-cols-2 gap-4">
+              {stats.map((stat, i) => (
+                <div key={stat.label} className="sci-card p-6 text-center"
+                  data-reveal style={{ '--reveal-delay': `${i * 100}ms` }}>
+                  <div className="sci-stat-value">
+                    <CountUp value={stat.value} unit={stat.unit} />
+                  </div>
+                  <div className="text-xs mt-2 tracking-wide" style={{ color: 'var(--text-muted)' }}>
+                    {stat.label}
+                  </div>
                 </div>
-                <div className="text-xs mt-2 tracking-wide" style={{ color: 'var(--text-muted)' }}>
-                  {stat.label}
-                </div>
+              ))}
+            </div>
+
+            {/* 技术关键词 */}
+            <div className="sci-card p-6 flex-1" data-reveal style={{ '--reveal-delay': '200ms' }}>
+              <div className="text-xs font-semibold tracking-widest uppercase mb-3"
+                style={{ color: 'var(--violet)' }}>
+                ✦ 技术关键词
               </div>
-            ))}
+              <div className="flex flex-wrap gap-2">
+                {keywords.map((k) => (
+                  <span key={k} className="sci-chip" style={{ fontSize: '0.72rem' }}>{k}</span>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -738,7 +800,7 @@ function Projects({ projects }) {
 function Education() {
   return (
     <section className="relative py-20 md:py-28">
-      <div className="max-w-6xl mx-auto px-6 relative z-10">
+      <div className="max-w-6xl mx-auto px-6 relative z-10 text-center">
         <SectionTitle subtitle="EDUCATION" title="教育背景" />
 
         <div className="sci-card inline-block p-8 md:p-10 min-w-[320px] text-left" data-reveal>
