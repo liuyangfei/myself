@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 
 /* ========== 导航栏数据 ========== */
 const NAV_ITEMS = [
@@ -864,51 +865,108 @@ function rand(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
-/* ==================== 可揭示的联系卡片（含验证码） ==================== */
+/* ==================== 可揭示的联系卡片（验证码弹窗） ==================== */
+const MAX_ATTEMPTS = 3
+const LOCK_SECONDS = 30
+
 function RevealCard({ icon, label, masked, full, href, actionLabel }) {
   const [revealed, setRevealed] = useState(false)
   const [copied, setCopied] = useState(false)
 
-  // 验证码状态
-  const [showCaptcha, setShowCaptcha] = useState(false)
+  // 验证弹窗状态
+  const [showModal, setShowModal] = useState(false)
   const [captcha, setCaptcha] = useState(null)
   const [userAnswer, setUserAnswer] = useState('')
   const [captchaError, setCaptchaError] = useState(false)
+  const [attempts, setAttempts] = useState(0)
+
+  // 锁定状态
+  const [locked, setLocked] = useState(false)
+  const [lockLeft, setLockLeft] = useState(0)
+
+  // 锁定倒计时
+  useEffect(() => {
+    if (!locked || lockLeft <= 0) return
+    const t = setTimeout(() => {
+      setLockLeft((c) => {
+        if (c <= 1) {
+          setLocked(false)
+          setAttempts(0)
+          return 0
+        }
+        return c - 1
+      })
+    }, 1000)
+    return () => clearTimeout(t)
+  }, [locked, lockLeft])
+
+  // 弹窗打开时：锁定 body 滚动 + Esc 关闭
+  useEffect(() => {
+    if (!showModal) return
+    const onKey = (e) => {
+      if (e.key === 'Escape') closeModal()
+    }
+    window.addEventListener('keydown', onKey)
+    document.body.style.overflow = 'hidden'
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      document.body.style.overflow = ''
+    }
+  }, [showModal])
 
   const handleCardClick = () => {
     if (revealed) {
-      // 已揭示，点击重新隐藏
       setRevealed(false)
-      setShowCaptcha(false)
-      setUserAnswer('')
-      setCaptchaError(false)
       return
     }
-    // 弹出验证码
+    if (locked) return
     setCaptcha(generateCaptcha())
-    setShowCaptcha(true)
+    setShowModal(true)
     setUserAnswer('')
     setCaptchaError(false)
   }
 
-  const handleVerify = (e) => {
-    e.stopPropagation()
+  const closeModal = () => {
+    setShowModal(false)
+    setUserAnswer('')
+    setCaptchaError(false)
+  }
+
+  const handleVerify = () => {
     const num = parseInt(userAnswer, 10)
-    if (num === captcha.answer) {
-      setShowCaptcha(false)
-      setRevealed(true)
-      setCaptchaError(false)
-      setUserAnswer('')
-    } else {
+
+    // 空输入：抖动提示，但不消耗尝试次数
+    if (Number.isNaN(num)) {
       setCaptchaError(true)
-      setCaptcha(generateCaptcha())
-      setUserAnswer('')
+      return
     }
+
+    if (num === captcha.answer) {
+      closeModal()
+      setRevealed(true)
+      setAttempts(0)
+      return
+    }
+
+    // 答错
+    const next = attempts + 1
+    setAttempts(next)
+
+    if (next >= MAX_ATTEMPTS) {
+      closeModal()
+      setLocked(true)
+      setLockLeft(LOCK_SECONDS)
+      return
+    }
+
+    setCaptchaError(true)
+    setCaptcha(generateCaptcha())
+    setUserAnswer('')
   }
 
   const handleInputKey = (e) => {
     if (e.key === 'Enter') {
-      handleVerify(e)
+      handleVerify()
     }
     e.stopPropagation()
   }
@@ -921,9 +979,11 @@ function RevealCard({ icon, label, masked, full, href, actionLabel }) {
     })
   }
 
+  const attemptsLeft = MAX_ATTEMPTS - attempts
+
   return (
     <div
-      className="contact-card sci-card p-5 flex items-center gap-4 cursor-pointer select-none relative overflow-visible"
+      className="contact-card sci-card p-5 flex items-center gap-4 cursor-pointer select-none"
       onClick={handleCardClick}
       role="button"
       tabIndex={0}
@@ -938,20 +998,27 @@ function RevealCard({ icon, label, masked, full, href, actionLabel }) {
         <div className="text-[10px] font-mono tracking-widest" style={{ color: 'var(--text-muted)' }}>
           {label}
         </div>
-        <div className={`text-sm font-medium font-mono transition-all duration-300 ${captchaError ? 'animate-shake' : ''}`}
+        <div className="text-sm font-medium font-mono transition-all duration-300"
           style={{ color: revealed ? 'var(--accent)' : 'var(--text-muted)' }}>
           {revealed ? full : masked}
         </div>
       </div>
 
-      {/* 右侧操作区 */}
+      {/* 右侧状态区 */}
       <div className="flex items-center gap-1.5 flex-shrink-0">
-        {!revealed && !showCaptcha && (
+        {!revealed && !locked && (
           <span className="text-xs font-mono tracking-wider"
             style={{ color: 'var(--text-muted)', opacity: 0.5 }}>
             点击查看
           </span>
         )}
+
+        {locked && (
+          <span className="text-xs font-mono animate-shake" style={{ color: '#f87171' }}>
+            🔒 {lockLeft}s
+          </span>
+        )}
+
         {revealed && (
           <>
             <button onClick={handleCopy} className="w-7 h-7 flex items-center justify-center rounded-md transition-all"
@@ -982,74 +1049,90 @@ function RevealCard({ icon, label, masked, full, href, actionLabel }) {
         )}
       </div>
 
-      {/* ===== 验证码浮层 ===== */}
-      {showCaptcha && captcha && (
-        <div
-          className="absolute inset-0 flex flex-col items-center justify-center z-10 rounded-[14px]"
-          style={{
-            background: captchaError
-              ? 'rgba(127,29,29,0.15)'
-              : 'rgba(8,8,12,0.95)',
-            backdropFilter: 'blur(10px)',
-            border: captchaError ? '1px solid rgba(248,113,113,0.35)' : '1px solid transparent',
-            transition: 'all 0.3s',
-          }}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div className="text-center px-4">
-            <div className="text-[9px] font-mono tracking-widest mb-2"
-              style={{ color: captchaError ? '#fca5a5' : 'var(--text-muted)' }}>
-              {captchaError ? '⚠️ 验证失败 · VERIFICATION FAILED' : '🤖 人机验证 · HUMAN VERIFICATION'}
-            </div>
-            <div className="text-lg font-bold font-mono tracking-wider mb-3"
-              style={{
-                color: captchaError ? '#fca5a5' : 'var(--text-primary)',
-                letterSpacing: '0.05em',
-                transition: 'color 0.3s',
-              }}>
-              {captcha.question}
-            </div>
-            <div className={`flex items-center gap-2 justify-center ${captchaError ? 'animate-shake' : ''}`}>
-              <input
-                type="text"
-                inputMode="numeric"
-                value={userAnswer}
-                onChange={(e) => { setUserAnswer(e.target.value); setCaptchaError(false) }}
-                onKeyDown={handleInputKey}
-                autoFocus
-                placeholder={captchaError ? '重新输入' : '输入答案'}
-                className="w-22 px-3 py-2 text-center text-sm font-mono rounded-md outline-none"
-                style={{
-                  background: captchaError
-                    ? 'rgba(248,113,113,0.1)'
-                    : 'rgba(255,255,255,0.04)',
-                  border: captchaError
-                    ? '1.5px solid rgba(248,113,113,0.5)'
-                    : '1px solid var(--border-strong)',
-                  color: captchaError ? '#fca5a5' : 'var(--text-primary)',
-                  transition: 'all 0.2s',
-                  boxShadow: captchaError ? '0 0 12px rgba(248,113,113,0.15)' : 'none',
-                }}
-              />
-              <button
-                onClick={handleVerify}
-                className="px-3 py-2 text-xs font-mono font-semibold rounded-md transition-all"
-                style={{
-                  background: captchaError
-                    ? 'rgba(248,113,113,0.15)'
-                    : 'rgba(45,212,191,0.1)',
-                  border: captchaError
-                    ? '1px solid rgba(248,113,113,0.3)'
-                    : '1px solid rgba(45,212,191,0.2)',
-                  color: captchaError ? '#fca5a5' : 'var(--accent)',
-                }}
-              >
-                ↵
+      {/* ===== 验证码弹窗（Portal 到 body 顶层） ===== */}
+      {showModal && captcha &&
+        createPortal(
+          <div className="modal-backdrop" onClick={closeModal}>
+            <div
+              className="modal-panel"
+              onClick={(e) => e.stopPropagation()}
+              role="dialog"
+              aria-modal="true"
+              aria-label="人机验证"
+            >
+              {/* 关闭按钮 */}
+              <button className="modal-close" onClick={closeModal} aria-label="关闭">
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
               </button>
+
+              <div className="text-center">
+                {/* 标题 */}
+                <div className="text-[10px] font-mono tracking-widest mb-3"
+                  style={{ color: 'var(--text-muted)' }}>
+                  🤖 人机验证 · HUMAN VERIFICATION
+                </div>
+
+                {/* 算式 */}
+                <div className="text-xl font-bold font-mono tracking-wider mb-5"
+                  style={{ color: 'var(--text-primary)' }}>
+                  {captcha.question}
+                </div>
+
+                {/* 输入行 */}
+                <div className={`flex items-center justify-center gap-2 ${captchaError ? 'animate-shake' : ''}`}>
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    value={userAnswer}
+                    onChange={(e) => { setUserAnswer(e.target.value); setCaptchaError(false) }}
+                    onKeyDown={handleInputKey}
+                    autoFocus
+                    placeholder="输入答案"
+                    className="w-28 px-3 py-2.5 text-center text-sm font-mono rounded-lg outline-none"
+                    style={{
+                      background: captchaError
+                        ? 'rgba(248,113,113,0.08)'
+                        : 'rgba(255,255,255,0.04)',
+                      border: captchaError
+                        ? '1.5px solid rgba(248,113,113,0.5)'
+                        : '1px solid var(--border-strong)',
+                      color: 'var(--text-primary)',
+                      transition: 'all 0.2s',
+                      boxShadow: captchaError ? '0 0 12px rgba(248,113,113,0.15)' : 'none',
+                    }}
+                  />
+                  <button
+                    onClick={handleVerify}
+                    className="px-4 py-2.5 text-sm font-mono font-semibold rounded-lg transition-all"
+                    style={{
+                      background: 'rgba(45,212,191,0.1)',
+                      border: '1px solid rgba(45,212,191,0.25)',
+                      color: 'var(--accent)',
+                    }}
+                  >
+                    验证
+                  </button>
+                </div>
+
+                {/* 错误提示 / 剩余次数 */}
+                <div className="mt-3 min-h-[20px]">
+                  {captchaError ? (
+                    <div className="text-xs font-mono" style={{ color: '#f87171' }}>
+                      ✗ 答案错误，还可尝试 {attemptsLeft} 次
+                    </div>
+                  ) : (
+                    <div className="text-xs font-mono" style={{ color: 'var(--text-muted)', opacity: 0.5 }}>
+                      剩余 {attemptsLeft} 次尝试机会
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      )}
+          </div>,
+          document.body
+        )}
     </div>
   )
 }
