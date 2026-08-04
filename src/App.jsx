@@ -488,8 +488,8 @@ function Hero() {
         </div>
 
         {/* 名字 */}
-        <h1 className="animate-fade-in animate-delay-1 text-6xl md:text-8xl font-bold tracking-wide leading-tight mb-5">
-          <span className="gradient-text">刘洋飞</span>
+        <h1 className="animate-fade-in animate-delay-1 mb-5">
+          <span className="hero-name">刘洋飞</span>
         </h1>
 
         {/* 英文标识 */}
