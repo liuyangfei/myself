@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 /* ========== 导航栏数据 ========== */
 const NAV_ITEMS = [
@@ -215,11 +215,15 @@ const STATS = [
 /* ==================== 根组件 ==================== */
 export default function App() {
   const [mobileOpen, setMobileOpen] = useState(false)
+  const active = useActiveSection()
+
+  // 全局滚动渐显
+  useScrollReveal()
 
   return (
     <div className="min-h-screen bg-[#08080c] text-[#e4e4e7]">
       <div className="sci-fi-root">
-        <Navbar mobileOpen={mobileOpen} onToggle={() => setMobileOpen(!mobileOpen)} />
+        <Navbar mobileOpen={mobileOpen} onToggle={() => setMobileOpen(!mobileOpen)} active={active} />
         <Hero />
         <About stats={STATS} />
         <Skills categories={SKILL_CATEGORIES} />
@@ -228,13 +232,190 @@ export default function App() {
         <Education />
         <Contact />
         <Footer />
+        <BackToTop />
       </div>
     </div>
   )
 }
 
+/* ==================== 滚动渐显 Hook ==================== */
+function useScrollReveal() {
+  useEffect(() => {
+    const els = document.querySelectorAll('[data-reveal]')
+    if (els.length === 0) return
+
+    // 尊重系统「减少动效」设置
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      els.forEach((el) => el.classList.add('reveal-visible'))
+      return
+    }
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('reveal-visible')
+            io.unobserve(entry.target)
+          }
+        })
+      },
+      { threshold: 0.12, rootMargin: '0px 0px -48px 0px' }
+    )
+
+    els.forEach((el) => io.observe(el))
+    return () => io.disconnect()
+  }, [])
+}
+
+/* ==================== 当前区块 Hook ==================== */
+function useActiveSection() {
+  const [active, setActive] = useState('')
+
+  useEffect(() => {
+    const ids = NAV_ITEMS.map((i) => i.href.slice(1))
+
+    const onScroll = () => {
+      const pos = window.scrollY + 140
+      let current = ''
+      for (const id of ids) {
+        const el = document.getElementById(id)
+        if (el && el.offsetTop <= pos) current = id
+      }
+      setActive(current)
+    }
+
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll, { passive: true })
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+    }
+  }, [])
+
+  return active
+}
+
+/* ==================== 打字机效果 ==================== */
+function Typewriter({ text, speed = 90, startDelay = 300 }) {
+  const [count, setCount] = useState(0)
+  const reduced = useRef(
+    typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  )
+
+  useEffect(() => {
+    if (reduced.current) {
+      setCount(text.length)
+      return
+    }
+
+    setCount(0)
+    let interval
+    const timeout = setTimeout(() => {
+      interval = setInterval(() => {
+        setCount((c) => {
+          if (c + 1 >= text.length) {
+            clearInterval(interval)
+            return text.length
+          }
+          return c + 1
+        })
+      }, speed)
+    }, startDelay)
+
+    return () => {
+      clearTimeout(timeout)
+      clearInterval(interval)
+    }
+  }, [text, speed, startDelay])
+
+  const done = count >= text.length
+
+  return (
+    <span>
+      {text.slice(0, count)}
+      <span className={`typing-cursor ${done ? 'typing-cursor-done' : ''}`}>▍</span>
+    </span>
+  )
+}
+
+/* ==================== 数字滚动 ==================== */
+function CountUp({ value, unit, duration = 1500 }) {
+  const ref = useRef(null)
+  const [display, setDisplay] = useState(value)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+
+    // 系统减少动效时直接显示最终值
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setDisplay(value)
+      return
+    }
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return
+        io.disconnect()
+
+        const target = parseFloat(value)
+        const isFloat = value.includes('.')
+        const start = performance.now()
+
+        const tick = (now) => {
+          const p = Math.min((now - start) / duration, 1)
+          const eased = 1 - Math.pow(1 - p, 3)
+          setDisplay(
+            isFloat ? (target * eased).toFixed(2) : String(Math.round(target * eased))
+          )
+          if (p < 1) requestAnimationFrame(tick)
+        }
+
+        requestAnimationFrame(tick)
+      },
+      { threshold: 0.4 }
+    )
+
+    io.observe(el)
+    return () => io.disconnect()
+  }, [value, duration])
+
+  return (
+    <span ref={ref}>
+      {display}
+      {unit && <span className="unit">{unit}</span>}
+    </span>
+  )
+}
+
+/* ==================== 回到顶部 ==================== */
+function BackToTop() {
+  const [visible, setVisible] = useState(false)
+
+  useEffect(() => {
+    const onScroll = () => setVisible(window.scrollY > 600)
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  return (
+    <button
+      onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+      className={`back-to-top ${visible ? 'back-to-top-visible' : ''}`}
+      aria-label="回到顶部"
+    >
+      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
+      </svg>
+    </button>
+  )
+}
+
 /* ==================== 导航栏 ==================== */
-function Navbar({ mobileOpen, onToggle }) {
+function Navbar({ mobileOpen, onToggle, active }) {
   return (
     <nav className="sci-nav">
       <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
@@ -251,7 +432,10 @@ function Navbar({ mobileOpen, onToggle }) {
         <ul className="hidden md:flex gap-8 text-sm">
           {NAV_ITEMS.map((item, i) => (
             <li key={item.href}>
-              <a href={item.href} className="sci-nav-link">
+              <a
+                href={item.href}
+                className={`sci-nav-link ${active === item.href.slice(1) ? 'sci-nav-link-active' : ''}`}
+              >
                 {item.label}
               </a>
             </li>
@@ -308,10 +492,10 @@ function Hero() {
 
         {/* 副标题 */}
         <p className="animate-fade-in animate-delay-1 text-lg md:text-xl mb-3"
-          style={{ color: 'var(--text-secondary)' }}>
-          Java 后端开发工程师
+          style={{ color: 'var(--text-secondary)', minHeight: '1.8em' }}>
+          <Typewriter text="Java 后端开发工程师" />
         </p>
-        <p className="animate-fade-in animate-delay-1 text-sm md:text-base mb-12"
+        <p className="animate-fade-in animate-delay-2 text-sm md:text-base mb-12"
           style={{ color: 'var(--text-muted)' }}>
           12 年经验 · 深圳 · DDD · 金融科技 · 高并发 · AI Coding
         </p>
@@ -348,7 +532,7 @@ function About({ stats }) {
 
         <div className="grid md:grid-cols-2 gap-10 items-start">
           {/* 左侧文字 */}
-          <div className="sci-card p-8 md:p-10">
+          <div className="sci-card p-8 md:p-10" data-reveal>
             <p className="text-[#a1a1aa] text-base leading-relaxed mb-5">
               <strong style={{ color: 'var(--text-primary)' }}>12 年</strong> Java 后端开发经验，具备
               技术架构设计、团队核心开发与跨系统项目管理等综合能力。
@@ -367,10 +551,10 @@ function About({ stats }) {
           {/* 右侧统计 */}
           <div className="grid grid-cols-2 gap-3">
             {stats.map((stat, i) => (
-              <div key={stat.label} className="sci-card p-5 text-center group">
+              <div key={stat.label} className="sci-card p-5 text-center group"
+                data-reveal style={{ '--reveal-delay': `${i * 100}ms` }}>
                 <div className="sci-stat-value">
-                  {stat.value}
-                  <span className="unit">{stat.unit}</span>
+                  <CountUp value={stat.value} unit={stat.unit} />
                 </div>
                 <div className="text-xs mt-2 tracking-wide"
                   style={{ color: 'var(--text-muted)' }}>
@@ -393,8 +577,9 @@ function Skills({ categories }) {
         <SectionTitle subtitle="SKILLS" title="专业技能" />
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {categories.map((cat) => (
-            <div key={cat.title} className="skill-cat-card sci-card p-5">
+          {categories.map((cat, i) => (
+            <div key={cat.title} className="skill-cat-card sci-card p-5"
+              data-reveal style={{ '--reveal-delay': `${(i % 3) * 100}ms` }}>
               <h3 className="text-sm font-semibold mb-3.5 tracking-wide"
                 style={{ color: 'var(--text-primary)' }}>
                 {cat.title}
@@ -423,7 +608,8 @@ function Experience({ experiences }) {
 
         <div className="sci-timeline pl-14 md:pl-16">
           {experiences.map((exp, i) => (
-            <div key={i} className="relative mb-8 group">
+            <div key={i} className="relative mb-8 group" data-reveal
+              style={{ '--reveal-delay': '0ms' }}>
               {/* 时间线节点 */}
               <div style={{
                 position: 'absolute',
@@ -499,8 +685,9 @@ function Projects({ projects }) {
         <SectionTitle subtitle="PROJECTS" title="项目经历" />
 
         <div className="grid md:grid-cols-2 gap-4">
-          {projects.map((proj) => (
-            <div key={proj.name} className="sci-card p-5 md:p-6 flex flex-col">
+          {projects.map((proj, i) => (
+            <div key={proj.name} className="sci-card p-5 md:p-6 flex flex-col"
+              data-reveal style={{ '--reveal-delay': `${(i % 2) * 100}ms` }}>
               {/* 标题 + 角色 */}
               <div className="flex items-start justify-between gap-3 mb-1">
                 <h3 className="text-base font-semibold" style={{ color: 'var(--text-primary)' }}>
@@ -572,7 +759,7 @@ function Education() {
       <div className="max-w-6xl mx-auto px-6 text-center relative z-10">
         <SectionTitle subtitle="EDUCATION" title="教育背景" />
 
-        <div className="inline-block sci-card p-8 md:p-10">
+        <div className="inline-block sci-card p-8 md:p-10" data-reveal>
           <h3 className="text-lg font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
             郑州轻工业大学
           </h3>
@@ -605,26 +792,30 @@ function Contact() {
         </p>
 
         <div className="grid md:grid-cols-2 gap-4 mb-6">
-          <RevealCard
-            icon="📧"
-            label="EMAIL"
-            masked="138****@139.com"
-            full="13823296947@139.com"
-            href="mailto:13823296947@139.com"
-            actionLabel="发送邮件"
-          />
-          <RevealCard
-            icon="📱"
-            label="PHONE"
-            masked="138****6947"
-            full="13823296947"
-            href="tel:13823296947"
-            actionLabel="拨打电话"
-          />
+          <div data-reveal style={{ '--reveal-delay': '0ms' }}>
+            <RevealCard
+              icon="📧"
+              label="EMAIL"
+              masked="138****@139.com"
+              full="13823296947@139.com"
+              href="mailto:13823296947@139.com"
+              actionLabel="发送邮件"
+            />
+          </div>
+          <div data-reveal style={{ '--reveal-delay': '100ms' }}>
+            <RevealCard
+              icon="📱"
+              label="PHONE"
+              masked="138****6947"
+              full="13823296947"
+              href="tel:13823296947"
+              actionLabel="拨打电话"
+            />
+          </div>
         </div>
 
         <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full"
-          style={{ border: '1px solid var(--border-subtle)' }}>
+          data-reveal style={{ '--reveal-delay': '150ms' }}>
           <span style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>📍</span>
           <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>
             期望地区：<strong style={{ color: 'var(--accent)' }}>深圳</strong>
