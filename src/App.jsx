@@ -14,7 +14,7 @@ const SKILL_CATEGORIES = [
   {
     title: '后端开发',
     icon: '⬡',
-    skills: ['Java', 'SpringBoot', 'SpringCloud', 'Grpc', 'Netty', 'DDD', 'ELK'],
+    skills: ['Java', 'SpringBoot', 'SpringCloud', 'gRPC', 'Netty', 'DDD 领域驱动设计', '微服务治理'],
   },
   {
     title: '前端开发',
@@ -22,87 +22,122 @@ const SKILL_CATEGORIES = [
     skills: ['React', 'Vue'],
   },
   {
-    title: '数据库 & 中间件',
+    title: '数据库 & 缓存',
     icon: '◉',
-    skills: ['MySQL', 'Redis', 'MongoDB', 'ShardingSphere', 'RabbitMQ', 'RocketMQ', 'CMQ', 'Kafka'],
+    skills: ['MySQL 分库分表/索引优化', 'Redis 缓存策略/持久化', 'ShardingSphere', 'MongoDB'],
   },
   {
-    title: 'DevOps & 运维',
+    title: '消息中间件',
+    icon: '⬙',
+    skills: ['RabbitMQ', 'RocketMQ', 'CMQ', 'Kafka'],
+  },
+  {
+    title: 'DevOps & 云平台',
     icon: '⎔',
-    skills: ['K8s', 'Docker', 'Nginx', 'Linux', 'Jenkins CI/CD', 'Git', 'Maven', 'Nacos', 'XxlJob'],
+    skills: ['K8s', 'Docker', 'Nginx', 'Linux', 'Jenkins CI/CD', 'Git', 'Maven', 'Nacos', 'XxlJob', '阿里云/华为云/腾讯云'],
+  },
+  {
+    title: '金融业务',
+    icon: '◈',
+    skills: ['人行征信上报与查询', '金融监管报送', '贷中风控', '信贷保障', '保险对接（众安）', '海外征信（TransUnion）'],
   },
   {
     title: 'AI & 新技术',
     icon: '⟡',
-    skills: ['AI Coding', 'RAG', 'Agent', 'AI 应用开发'],
+    skills: ['AI Coding', 'Agent'],
   },
 ]
 
 /* ========== 工作经历数据 ========== */
 const EXPERIENCES = [
   {
-    period: '2023.07 - 2026.07',
-    role: 'Java 高级开发工程师',
-    company: 'SaaS 平台',
+    period: '2023.07 - 至今',
+    role: 'Java 开发工程师',
+    company: '深圳市互联数智科技有限公司',
+    subtitle: '金融科技 SaaS 服务商 · 核心开发兼架构设计',
     highlights: [
-      '负责 SaaS 平台从 0 到 1 的全流程开发与架构设计',
-      '基于 SpringBoot + SpringCloud 微服务架构，支撑 700+ 企业客户',
-      '实现 100+ 租户、300+ 用户规模下的系统高可用，可用性达 99.99%',
-      '集成 CRM 系统，实现客户管理全链路数字化',
-      '使用 ShardingSphere 实现数据库分库分表，MongoDB 存储非结构化数据',
+      '独立负责征信业务系统与融担 SaaS 监管上报平台两大核心平台的全栈建设，覆盖后端、前端（React、Vue）及运维部署',
+      '搭建基于 SpringBoot + gRPC 的微服务架构，结合 Redis 缓存与 MySQL 分库分表，引入 ShardingSphere 按日期分表及 MongoDB 存储非结构化附件',
+      '开发可配置化规则引擎，将监管校验逻辑抽离为配置脚本，支持监管字段频繁变更场景下的快速迭代',
+      '负责 Linux 环境部署、Nginx 负载均衡及日常运维，保障系统全年 99.99% 可用性',
+    ],
+    metrics: [
+      { value: '700万', label: '成本节省' },
+      { value: '100万+', label: '征信上报笔数' },
+      { value: '300万+', label: '在线查询笔数' },
+      { value: '100%', label: '监管合规率' },
     ],
   },
   {
     period: '2021.01 - 2023.07',
     role: 'Java 开发工程师',
-    company: 'Fusion Bank （腾讯系数字银行）',
+    company: '深圳市富融信息科技有限公司',
+    subtitle: '香港富融银行（Fusion Bank）大陆技术研发 · 技术负责人',
     highlights: [
-      '主导 C++ 遗留系统向 Java 微服务架构的迁移，涉及 10+ 核心服务',
-      '深度实践 DDD（领域驱动设计），建立团队的 DDD 落地规范',
-      '对接 TransUnion 征信系统，实现风控数据实时查询，性能提升 350%',
-      '使用 Grpc 实现服务间高性能通信，CMQ 消息队列保证数据最终一致性',
+      '主导贷中触达平台从 C++ 至 Java 的完整 DDD 重构，采用限界上下文将业务划分为"通知域""策略域""事件域"，通过领域事件解耦各业务模块',
+      '设计并实施"双写+灰度"平滑迁移策略，新旧系统并行运行、逐步切换流量，确保迁移过程零故障',
+      '对接 TransUnion（香港）海外征信系统，实现客户信用数据实时查询，补强贷中风控数据维度',
+      '使用多线程等策略对重构后系统进行性能优化，并发吞吐量提升至原来的 3 倍，响应时间降低 50%',
+    ],
+    metrics: [
+      { value: '3x', label: '并发吞吐提升' },
+      { value: '50%', label: '响应时间降低' },
+      { value: '10亿+', label: '信贷规模（港币）' },
+      { value: '0', label: '迁移重大故障' },
     ],
   },
   {
     period: '2019.07 - 2020.12',
     role: 'Java 开发工程师',
-    company: 'NYSE:XYF （纽交所上市金融科技公司）',
+    company: '深圳市小赢科技有限公司',
+    subtitle: '小赢科技（NYSE: XYF）· 后台核心开发',
     highlights: [
-      '负责金融核心系统 C++ 转 Java 的技术改造，100% 完成迁移',
-      '基于 DDD 进行领域建模，重构核心业务逻辑',
-      '设计 Scheduler + Saturn 分布式任务调度体系，管理 10+ 定时任务',
-      '系统可用性保持在 99.9% 以上',
+      '负责信贷保障全流程（授信、投保、报案、追偿还款）系统的设计与开发，主导核心业务模块从 C++ 至 Java 的 DDD 重构',
+      '使用 Scheduler + Saturn 分布式调度框架编排跨系统业务流程，结合状态机管理，确保 10+ 个跨系统步骤有序执行',
+      '采用分布式事务补偿机制，保障投保与追偿金融交易的数据一致性，异常时自动触发重试与告警',
+      '对接众安保险系统，保障保险对接与还款跟踪的高可靠性',
+    ],
+    metrics: [
+      { value: '100%', label: 'C++→Java 迁移完成' },
+      { value: '99.9%', label: '保险对接成功率' },
+      { value: '10+', label: '跨系统步骤编排' },
     ],
   },
   {
     period: '2017.02 - 2019.07',
     role: 'Java 开发工程师',
-    company: 'SDK 平台',
+    company: '珠海市小源科技有限公司',
+    subtitle: '信析宝 SDK 核心接口组 · 骨干开发 · 获"性能优化奖"',
     highlights: [
-      '负责 15 款 SDK 的设计、开发与维护，覆盖多种业务场景',
-      '使用 SpringBoot + Netty 构建高性能网关，NIO 模型替换传统 Tomcat BIO',
-      '接口响应时间从 200ms 降至 120ms，性能提升 40%',
-      'Redis + MySQL 多级缓存方案，大幅降低数据库压力',
-      'JVM 性能调优，解决内存泄漏与 GC 停顿问题',
+      '基于 SpringBoot + Netty 构建非阻塞 NIO I/O 模型，替代传统 Tomcat BIO，并发连接数提升 5 倍',
+      '构建 Redis + 本地多级缓存架构，结合布隆过滤器 + 互斥锁防御缓存击穿，保障热点查询稳定性',
+      '主导全链路压测与 JVM 调优（GC 停顿优化），荣获公司年度"性能优化奖"',
+    ],
+    metrics: [
+      { value: '15亿', unit: '次/日', label: '接口请求量' },
+      { value: '40%', label: '响应时间降低' },
+      { value: '5x', label: '并发连接提升' },
     ],
   },
   {
     period: '2015.09 - 2016.10',
     role: 'Java 开发工程师',
-    company: '互联网公司',
+    company: '云印技术有限公司',
+    subtitle: '互联网印刷电商 · 后台开发',
     highlights: [
-      '负责后端服务设计与开发',
-      '使用 RabbitMQ 实现异步消息处理，解耦系统模块',
+      '负责电商平台后台订单模块的架构重构，引入 RabbitMQ 实现订单创建、支付、履约等关键节点的业务解耦',
+      '通过消息异步化改造，显著提升系统稳定性，降低模块间耦合风险，改善线上问题定位效率',
     ],
   },
   {
     period: '2014.03 - 2015.09',
     role: 'Java 开发工程师',
-    company: '139 邮箱 （中国移动）',
+    company: '深圳市彩讯科技有限公司',
+    subtitle: '中国移动 139 邮箱技术服务商 · 中间件研发',
     highlights: [
-      '参与 PNS139 推送通知服务平台开发',
-      '负责 iOS/Android 双端消息推送服务，支撑 139 邮箱百万级用户',
-      '设计并实现高并发消息推送架构',
+      '参与研发高可用 PNS 消息推送平台，服务 139 邮箱及多家企业客户，支持 iOS/Android 多端长连接推送',
+      '参与 139 邮箱配置中心开发，基于长连接实现配置实时下发与动态刷新能力',
+      '参与移动公司招投标技术标书编写，助力项目成功中标',
     ],
   },
 ]
@@ -110,54 +145,68 @@ const EXPERIENCES = [
 /* ========== 项目数据 ========== */
 const PROJECTS = [
   {
-    name: 'SaaS 多租户平台',
-    period: '2023.07 - 2026.07',
-    tech: 'SpringBoot + Docker + MySQL + Redis + React + Jenkins + Nginx + Nacos + XxlJob',
+    name: '征信业务系统',
+    period: '2023.07 - 至今',
+    role: '总负责人',
+    intro: '面向融担/小贷公司的统一征信前置平台，对接人行征信系统，实现征信报送、查询及离线建模支撑一体化。',
+    tech: 'SpringBoot + Docker + MySQL + Redis + React + Jenkins + Nginx + Nacos + XxlJob + 华为云/阿里云',
     achievements: [
-      '从 0 到 1 构建，支撑 100+ 企业租户、300+ 活跃用户',
-      '基于 XXL-Job 实现分布式任务调度，Redis 缓存方案支撑 1.5万+ QPS',
-      '系统可用性 99.99%，100% 租户数据隔离',
-      '前端 React 技术栈，Jenkins CI/CD 自动化部署',
+      '设计百亿级数据存储方案，解决人行征信数百个字段与业务数据库的合规映射问题',
+      '采用 XXL 切片 + 多线程策略，保障风控征信报文在数十秒内完成查询与返回',
+      '引入 Redis 热点数据缓存与线程池限流措施，应对日均 1.5 万+ 笔并发查询及人行 QPS 限制约束',
+      '累计完成 100 万+ 笔征信上报（准确率 100%）及 300 万+ 笔在线查询，自建系统直接节省成本 700 万元',
     ],
   },
   {
-    name: 'SaaS 企业服务平台',
-    period: '2023.07 - 2026.07',
-    tech: 'SpringBoot + SpringCloud + MySQL + Redis + React + Jenkins + Nginx + Nacos',
+    name: '融担业务数据管理 SaaS 及监管上报平台',
+    period: '2023.07 - 至今',
+    role: '总负责人',
+    intro: '面向融担公司的 SaaS 化监管上报平台，支撑向天津金融监管局报送百亿级担保数据，服务多家头部融担公司。',
+    tech: 'SpringBoot + gRPC + MySQL + Redis + React + Jenkins + Nginx + Nacos + XxlJob + 华为云',
     achievements: [
-      '微服务架构，ShardingSphere 分库分表应对海量数据',
-      'OBS 对象存储集成，100% 文件上传成功率',
-      '全链路监控与告警体系建设',
+      '采用 ShardingSphere 按日期分表策略应对百亿级担保数据存储，引入 MongoDB 存储非结构化担保附件',
+      '开发可配置化规则引擎，将数百项监管字段校验逻辑抽离为配置化脚本，支持监管规则频繁变更',
+      '设计"预校验+正式上报"双阶段流程，正式上报后实时回执确认，确保上报合规性与准确性',
+      '累计上报百亿级担保数据，合规达标率 100%，服务明东东华、华澎等多家头部融担公司',
     ],
   },
   {
-    name: 'C++ → Java 遗留系统迁移（Fusion Bank）',
+    name: '富融银行贷中触达系统重构',
     period: '2021.01 - 2023.07',
-    tech: 'SpringBoot + CMQ + Grpc + MySQL + Redis',
+    role: '技术负责人',
+    intro: '香港富融银行贷中触达核心系统，原系统基于 C++ 老旧框架，重构至 Java 微服务架构，支撑超 10 亿港币信贷规模。',
+    tech: 'SpringBoot + CMQ + gRPC + MySQL + Redis',
     achievements: [
-      '10+ 核心服务从 C++ 迁移至 Java，350% 性能提升',
-      'DDD 领域驱动设计重塑业务模型，"+" 业务增量开发效率大幅提升',
-      '对接 TransUnion 征信，实时风控数据查询',
+      '主导从 C++ 至 Java 的完整 DDD 重构，将业务划分为"通知域""策略域""事件域"，通过领域事件解耦业务模块',
+      '设计并实施"双写+灰度"平滑迁移策略，新旧系统并行运行、逐步切换流量，迁移过程零重大故障',
+      '对接 TransUnion（香港）海外征信系统，实现客户信用数据实时查询，补强贷中风控数据维度',
+      '重构后并发吞吐量提升至原来的 3 倍，响应时间降低 50%，技术栈风险全面消除',
     ],
   },
   {
-    name: '金融核心系统改造（NYSE:XYF）',
+    name: '信贷保障方平台',
     period: '2019.07 - 2020.12',
-    tech: 'SpringBoot + CMQ + ServiceMesh + MySQL + Scheduler + Saturn',
+    role: '技术负责人',
+    intro: '小赢科技信贷业务全流程保障平台，对接众安保险，覆盖授信、投保、报案、追偿还款全流程。',
+    tech: 'SpringBoot + CMQ + Service Mesh + MySQL + Scheduler + Saturn',
     achievements: [
-      '100% 完成 C++ 到 Java 的代码迁移，10+ 微服务稳定运行',
-      'Scheduler + Saturn 分布式定时任务，99.9% 可用性',
-      'ServiceMesh 服务网格架构升级，提升服务治理能力',
+      '主导全流程业务模块从 C++ 至 Java 的 DDD 重构，落地高内聚低耦合业务模型，消除旧系统技术债',
+      '采用 Scheduler + Saturn 分布式调度框架实现跨系统任务编排，结合状态机管理，确保 10+ 步骤有序可靠执行',
+      '采用分布式事务补偿机制保障金融交易数据一致性，异常时自动触发重试与告警',
+      '100% 完成 C++ 至 Java 重构，保险对接成功率提升至 99.9%',
     ],
   },
   {
-    name: '高性能 SDK 网关平台',
+    name: '信析宝 SDK 核心接口',
     period: '2017.02 - 2019.07',
+    role: '技术负责人',
+    intro: '嵌入华为、小米、联想等手机系统的智能短信 SDK，日均请求量 15 亿次，国内规模最大的手机系统级智能短信服务之一。',
     tech: 'SpringBoot + Netty + Redis + MySQL + MongoDB',
     achievements: [
-      '管理 15 款 SDK 的全生命周期',
-      'Netty NIO 替换 Tomcat BIO，响应时间 200ms → 120ms（降低 40%）',
-      '多级缓存策略，Redis + MongoDB 应对 5 倍流量增长',
+      '采用 Netty 实现 NIO 非阻塞 I/O 模型，替代传统 Tomcat BIO，并发连接数提升 5 倍',
+      '构建 Redis + 本地多级缓存架构，结合布隆过滤器 + 互斥锁防御缓存击穿，保障热点查询稳定性',
+      '主导全链路压测与 JVM 调优（GC 停顿优化），核心接口响应时间从 200ms 降至 120ms（提升 40%）',
+      '全年无重大故障，荣获公司年度"性能优化奖"',
     ],
   },
 ]
@@ -165,9 +214,9 @@ const PROJECTS = [
 /* ========== 统计数字 ========== */
 const STATS = [
   { value: '12', unit: '年', label: 'Java 开发经验' },
-  { value: '10+', unit: '个', label: '核心微服务迁移' },
+  { value: '700', unit: '万', label: '成本节省' },
   { value: '99.99', unit: '%', label: '系统可用性' },
-  { value: '350', unit: '%', label: '性能提升记录' },
+  { value: '3x', label: '并发吞吐提升' },
 ]
 
 /* ==================== 根组件 ==================== */
@@ -279,7 +328,7 @@ function Hero() {
           style={{ background: 'rgba(0,240,255,0.05)', border: '1px solid var(--border-subtle)' }}>
           <div className="pulse-dot-green" />
           <span className="text-sm font-medium tracking-wide" style={{ color: 'var(--green)' }}>
-            AVAILABLE FOR WORK
+            求职中 — Java 后端开发工程师 · 期望地区：深圳
           </span>
         </div>
 
@@ -298,14 +347,14 @@ function Hero() {
               <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#ff5f57' }} />
               <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#febc2e' }} />
               <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#28c840' }} />
-              <span className="text-xs ml-3" style={{ color: 'var(--text-muted)', fontFamily: 'monospace' }}>terminal — liuyangfei@system</span>
+              <span className="text-xs ml-3" style={{ color: 'var(--text-muted)', fontFamily: 'monospace' }}>terminal — liuyangfei@sz</span>
             </div>
             <p className="font-mono text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
               <span style={{ color: 'var(--cyan)' }}>$ </span>
-              <span>Java 高级开发工程师 · 12 年经验</span>
+              <span>Java 后端开发工程师 · 12 年经验 · 深圳</span>
               <br />
               <span style={{ color: 'var(--cyan)' }}>$ </span>
-              <span>专注高可用分布式系统 · DDD · AI 应用开发</span>
+              <span>DDD 领域驱动设计 · 金融科技 · 高并发 · AI Coding</span>
               <span className="terminal-cursor" />
             </p>
           </div>
@@ -338,13 +387,12 @@ function Hero() {
 function About({ stats }) {
   return (
     <section id="about" className="relative py-20 md:py-28">
-      {/* 背景装饰 */}
       <div className="hex-decoration" style={{ top: 40, right: 30, opacity: 0.15, width: 150, height: 150 }} />
 
       <div className="max-w-6xl mx-auto px-6 relative z-10">
-        <SectionTitle subtitle="ABOUT" title="关于我" />
+        <SectionTitle subtitle="ABOUT" title="自我评价" />
 
-        <div className="grid md:grid-cols-2 gap-12 items-center">
+        <div className="grid md:grid-cols-2 gap-12 items-start">
           {/* 左侧文字卡片 */}
           <div className="sci-card p-8">
             <div className="flex items-center gap-3 mb-5">
@@ -354,18 +402,17 @@ function About({ stats }) {
               </span>
             </div>
             <p className="text-[#94a3b8] text-base leading-relaxed mb-4">
-              一名拥有 <strong style={{ color: 'var(--cyan)' }}>12 年</strong> 经验的 Java 开发工程师，
-              具备从 <strong style={{ color: 'var(--cyan)' }}>0 到 1</strong> 构建大型 SaaS 平台的能力。
+              <strong style={{ color: 'var(--cyan)' }}>12 年</strong> Java 后端开发经验，具备
+              技术架构设计、团队核心开发与跨系统项目管理等综合能力。
             </p>
             <p className="text-[#94a3b8] text-base leading-relaxed mb-4">
-              精通 <strong style={{ color: 'var(--cyan)' }}>SpringBoot / SpringCloud</strong> 微服务生态，
-              深度实践 <strong style={{ color: 'var(--magenta)' }}>DDD（领域驱动设计）</strong>，
-              在金融科技、SaaS 平台、高性能 SDK 等领域有丰富的实战经验。
+              擅长将 <strong style={{ color: 'var(--magenta)' }}>DDD 设计理念</strong> 落地于
+              复杂金融业务场景，主导多次 C++ 至 Java 系统重构，
+              善于利用 <strong style={{ color: 'var(--purple)' }}>AI 工具（AI Coding）</strong> 赋能团队效能提升。
             </p>
             <p className="text-[#94a3b8] text-base leading-relaxed">
-              近期积极拥抱 <strong style={{ color: 'var(--purple)' }}>AI 技术</strong>，
-              掌握 AI Coding、RAG、Agent 等 AI 应用开发技能，
-              致力于将 AI 能力融入企业级软件开发流程。
+              持有公司 <strong style={{ color: 'var(--gold)' }}>"性能优化奖"</strong> 与
+              <strong style={{ color: 'var(--gold)' }}> "文化先锋"</strong> 荣誉。
             </p>
           </div>
 
@@ -376,12 +423,11 @@ function About({ stats }) {
                 style={{ animationDelay: `${0.2 + i * 0.1}s` }}>
                 <div className="sci-stat-value">
                   {stat.value}
-                  <span className="text-lg ml-1" style={{ color: 'var(--text-muted)' }}>{stat.unit}</span>
+                  {stat.unit && <span className="text-lg ml-1" style={{ color: 'var(--text-muted)' }}>{stat.unit}</span>}
                 </div>
                 <div className="text-xs mt-2 tracking-wide font-mono" style={{ color: 'var(--text-muted)' }}>
                   {stat.label}
                 </div>
-                {/* 底部发光条 */}
                 <div className="mt-4 mx-auto w-0 h-0.5 rounded group-hover:w-full transition-all duration-500"
                   style={{ background: 'var(--cyan)', boxShadow: '0 0 8px var(--cyan)' }} />
               </div>
@@ -397,11 +443,10 @@ function About({ stats }) {
 function Skills({ categories }) {
   return (
     <section id="skills" className="relative py-20 md:py-28" style={{ background: 'var(--bg-surface)' }}>
-      {/* 装饰 */}
       <div className="hex-decoration" style={{ bottom: 40, left: 20, opacity: 0.1, width: 100, height: 100 }} />
 
       <div className="max-w-6xl mx-auto px-6 relative z-10">
-        <SectionTitle subtitle="SKILLS" title="技术栈" />
+        <SectionTitle subtitle="SKILLS" title="专业技能" />
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
           {categories.map((cat) => (
@@ -426,7 +471,7 @@ function Skills({ categories }) {
   )
 }
 
-/* ==================== 工作经历: 科幻时间线 ==================== */
+/* ==================== 工作经历 ==================== */
 function Experience({ experiences }) {
   return (
     <section id="experience" className="relative py-20 md:py-28">
@@ -450,7 +495,6 @@ function Experience({ experiences }) {
                 zIndex: 2,
                 transition: 'all 0.3s',
               }} />
-              {/* 连接线到卡片 */}
               <div style={{
                 position: 'absolute',
                 left: -37,
@@ -477,9 +521,14 @@ function Experience({ experiences }) {
                 <h3 className="text-lg font-bold mb-1" style={{ color: 'var(--text-primary)' }}>
                   {exp.role}
                 </h3>
-                <p className="text-sm font-medium mb-3" style={{ color: 'var(--magenta)' }}>
-                  ⬡ {exp.company}
+                <p className="text-sm font-semibold mb-1" style={{ color: 'var(--magenta)' }}>
+                  {exp.company}
                 </p>
+                {exp.subtitle && (
+                  <p className="text-xs mb-3 font-mono" style={{ color: 'var(--text-muted)' }}>
+                    {exp.subtitle}
+                  </p>
+                )}
                 <ul className="space-y-2.5">
                   {exp.highlights.map((h, j) => (
                     <li key={j} className="flex items-start gap-3 text-sm" style={{ color: 'var(--text-secondary)' }}>
@@ -491,6 +540,23 @@ function Experience({ experiences }) {
                     </li>
                   ))}
                 </ul>
+
+                {/* 关键指标 */}
+                {exp.metrics && (
+                  <div className="mt-4 pt-4 flex flex-wrap gap-3" style={{ borderTop: '1px solid var(--border-subtle)' }}>
+                    {exp.metrics.map((m, k) => (
+                      <div key={k} className="text-center px-3 py-1.5 rounded-lg"
+                        style={{ background: 'rgba(0,240,255,0.04)', border: '1px solid var(--border-subtle)' }}>
+                        <div className="text-sm font-bold font-mono" style={{ color: 'var(--cyan)' }}>
+                          {m.value}
+                        </div>
+                        <div className="text-[10px] font-mono" style={{ color: 'var(--text-muted)' }}>
+                          {m.label}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           ))}
@@ -505,20 +571,32 @@ function Projects({ projects }) {
   return (
     <section id="projects" className="relative py-20 md:py-28" style={{ background: 'var(--bg-surface)' }}>
       <div className="max-w-6xl mx-auto px-6 relative z-10">
-        <SectionTitle subtitle="PROJECTS" title="项目经验" />
+        <SectionTitle subtitle="PROJECTS" title="项目经历" />
 
         <div className="grid md:grid-cols-2 gap-5">
           {projects.map((proj) => (
             <div key={proj.name} className="sci-card p-6 flex flex-col">
-              {/* 标题 */}
-              <div className="flex items-start justify-between mb-1">
+              <div className="flex items-start justify-between mb-1 gap-3">
                 <h3 className="text-lg font-bold" style={{ color: 'var(--text-primary)' }}>
                   {proj.name}
                 </h3>
+                {proj.role && (
+                  <span className="text-xs px-2 py-0.5 rounded-full font-mono flex-shrink-0"
+                    style={{ color: 'var(--cyan)', background: 'rgba(0,240,255,0.08)', border: '1px solid var(--border-subtle)' }}>
+                    {proj.role}
+                  </span>
+                )}
               </div>
-              <p className="text-xs font-mono mb-4" style={{ color: 'var(--cyan)' }}>
+              <p className="text-xs font-mono mb-2" style={{ color: 'var(--cyan)' }}>
                 {proj.period}
               </p>
+
+              {/* 项目简介 */}
+              {proj.intro && (
+                <p className="text-sm mb-4 leading-relaxed" style={{ color: 'var(--text-muted)' }}>
+                  {proj.intro}
+                </p>
+              )}
 
               {/* 技术标签 */}
               <div className="flex flex-wrap gap-1.5 mb-4">
@@ -547,12 +625,6 @@ function Projects({ projects }) {
                   </li>
                 ))}
               </ul>
-
-              {/* 底部闪烁线 */}
-              <div className="mt-4 h-px w-0 group-hover:w-full transition-all duration-700 mx-auto"
-                style={{ background: 'linear-gradient(90deg, transparent, var(--cyan), transparent)' }}
-                onMouseEnter={(e) => e.currentTarget.style.width = '100%'}
-              />
             </div>
           ))}
         </div>
@@ -584,7 +656,12 @@ function Education() {
             className="group-hover:!opacity-100" />
 
           <div className="text-5xl mb-5">🎓</div>
-          <h3 className="text-xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>本科学历</h3>
+          <h3 className="text-xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>
+            郑州轻工业大学
+          </h3>
+          <p className="text-sm mb-1" style={{ color: 'var(--text-secondary)' }}>
+            计算机科学与技术 · 本科 · 统招
+          </p>
           <p className="font-mono text-sm tracking-wide" style={{ color: 'var(--cyan)' }}>
             2010.09 — 2014.07
           </p>
@@ -598,7 +675,6 @@ function Education() {
 function Contact() {
   return (
     <section id="contact" className="relative py-20 md:py-28 overflow-hidden">
-      {/* 背景发光 */}
       <div className="hero-glow" style={{
         background: 'radial-gradient(circle, rgba(0,240,255,0.2) 0%, transparent 70%)',
         top: '30%', left: '50%', transform: 'translate(-50%, -50%)',
@@ -642,12 +718,22 @@ function Contact() {
           </div>
         </div>
 
-        {/* 开放工作 */}
+        {/* 期望地区 */}
+        <div className="sci-card inline-block px-8 py-4 mb-4" style={{ borderColor: 'rgba(0,240,255,0.15)' }}>
+          <div className="flex items-center gap-3">
+            <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>📍</span>
+            <span className="text-sm tracking-wide" style={{ color: 'var(--text-secondary)' }}>
+              期望地区：<strong style={{ color: 'var(--cyan)' }}>深圳</strong>
+            </span>
+          </div>
+        </div>
+
+        {/* 求职状态 */}
         <div className="sci-card inline-block px-8 py-4" style={{ borderColor: 'rgba(52,211,153,0.2)' }}>
           <div className="flex items-center gap-3">
             <div className="pulse-dot-green" />
             <span className="text-sm font-medium tracking-wide" style={{ color: 'var(--green)' }}>
-              目前开放工作机会，期待与您交流！
+              求职意向：Java 后端开发工程师 — 期待与您交流！
             </span>
           </div>
         </div>
