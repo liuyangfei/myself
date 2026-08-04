@@ -605,32 +605,22 @@ function Contact() {
         </p>
 
         <div className="grid md:grid-cols-2 gap-4 mb-6">
-          <a href="mailto:13823296947@139.com"
-            className="contact-card sci-card p-5 flex items-center gap-4 no-underline">
-            <div className="w-10 h-10 rounded-lg flex items-center justify-center text-lg"
-              style={{ background: 'rgba(45,212,191,0.06)', border: '1px solid rgba(45,212,191,0.1)' }}>
-              📧
-            </div>
-            <div className="text-left">
-              <div className="text-[10px] font-mono tracking-widest" style={{ color: 'var(--text-muted)' }}>EMAIL</div>
-              <div className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
-                13823296947@139.com
-              </div>
-            </div>
-          </a>
-
-          <div className="contact-card sci-card p-5 flex items-center gap-4">
-            <div className="w-10 h-10 rounded-lg flex items-center justify-center text-lg"
-              style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-subtle)' }}>
-              📱
-            </div>
-            <div className="text-left">
-              <div className="text-[10px] font-mono tracking-widest" style={{ color: 'var(--text-muted)' }}>PHONE</div>
-              <div className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
-                13823296947
-              </div>
-            </div>
-          </div>
+          <RevealCard
+            icon="📧"
+            label="EMAIL"
+            masked="138****@139.com"
+            full="13823296947@139.com"
+            href="mailto:13823296947@139.com"
+            actionLabel="发送邮件"
+          />
+          <RevealCard
+            icon="📱"
+            label="PHONE"
+            masked="138****6947"
+            full="13823296947"
+            href="tel:13823296947"
+            actionLabel="拨打电话"
+          />
         </div>
 
         <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full"
@@ -642,6 +632,95 @@ function Contact() {
         </div>
       </div>
     </section>
+  )
+}
+
+/* ==================== 可揭示的联系卡片 ==================== */
+function RevealCard({ icon, label, masked, full, href, actionLabel }) {
+  const [revealed, setRevealed] = useState(false)
+  const [copied, setCopied] = useState(false)
+
+  const handleCopy = (e) => {
+    e.stopPropagation()
+    navigator.clipboard.writeText(full).then(() => {
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    })
+  }
+
+  return (
+    <div
+      className="contact-card sci-card p-5 flex items-center gap-4 cursor-pointer select-none"
+      onClick={() => setRevealed(!revealed)}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => { if (e.key === 'Enter') setRevealed(!revealed) }}
+    >
+      <div className="w-10 h-10 rounded-lg flex items-center justify-center text-lg flex-shrink-0"
+        style={{ background: 'rgba(45,212,191,0.06)', border: '1px solid rgba(45,212,191,0.1)' }}>
+        {icon}
+      </div>
+
+      <div className="text-left flex-1 min-w-0">
+        <div className="text-[10px] font-mono tracking-widest" style={{ color: 'var(--text-muted)' }}>
+          {label}
+        </div>
+        <div className="text-sm font-medium font-mono transition-all duration-300"
+          style={{ color: revealed ? 'var(--accent)' : 'var(--text-muted)' }}>
+          {revealed ? full : masked}
+        </div>
+      </div>
+
+      {/* 操作区 */}
+      <div className="flex items-center gap-1.5 flex-shrink-0">
+        {!revealed ? (
+          <span className="text-xs font-mono tracking-wider"
+            style={{ color: 'var(--text-muted)', opacity: 0.5 }}>
+            点击查看
+          </span>
+        ) : (
+          <>
+            {/* 复制按钮 */}
+            <button
+              onClick={handleCopy}
+              className="flex items-center justify-center w-7 h-7 rounded-md transition-all"
+              style={{
+                background: copied ? 'rgba(45,212,191,0.12)' : 'rgba(255,255,255,0.03)',
+                border: copied ? '1px solid rgba(45,212,191,0.2)' : '1px solid var(--border-subtle)',
+                color: copied ? 'var(--accent)' : 'var(--text-muted)',
+              }}
+              title="复制"
+            >
+              {copied ? (
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              ) : (
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+              )}
+            </button>
+            {/* 直达链接 */}
+            <a
+              href={href}
+              onClick={(e) => e.stopPropagation()}
+              className="flex items-center justify-center w-7 h-7 rounded-md transition-all"
+              style={{
+                background: 'rgba(255,255,255,0.03)',
+                border: '1px solid var(--border-subtle)',
+                color: 'var(--text-muted)',
+              }}
+              title={actionLabel}
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </a>
+          </>
+        )}
+      </div>
+    </div>
   )
 }
 
