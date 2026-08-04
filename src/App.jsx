@@ -794,20 +794,31 @@ function RevealCard({ icon, label, masked, full, href, actionLabel }) {
       {/* ===== 验证码浮层 ===== */}
       {showCaptcha && captcha && (
         <div
-          className="absolute inset-0 flex items-center justify-center z-10 rounded-[14px]"
-          style={{ background: 'rgba(8,8,12,0.95)', backdropFilter: 'blur(8px)' }}
+          className="absolute inset-0 flex flex-col items-center justify-center z-10 rounded-[14px]"
+          style={{
+            background: captchaError
+              ? 'rgba(127,29,29,0.15)'
+              : 'rgba(8,8,12,0.95)',
+            backdropFilter: 'blur(10px)',
+            border: captchaError ? '1px solid rgba(248,113,113,0.35)' : '1px solid transparent',
+            transition: 'all 0.3s',
+          }}
           onClick={(e) => e.stopPropagation()}
         >
           <div className="text-center px-4">
-            <div className="text-[10px] font-mono tracking-widest mb-2"
-              style={{ color: 'var(--text-muted)' }}>
-              🤖 人机验证 · HUMAN VERIFICATION
+            <div className="text-[9px] font-mono tracking-widest mb-2"
+              style={{ color: captchaError ? '#fca5a5' : 'var(--text-muted)' }}>
+              {captchaError ? '⚠️ 验证失败 · VERIFICATION FAILED' : '🤖 人机验证 · HUMAN VERIFICATION'}
             </div>
-            <div className="text-xl font-bold font-mono tracking-wider mb-3"
-              style={{ color: 'var(--text-primary)', letterSpacing: '0.05em' }}>
+            <div className="text-lg font-bold font-mono tracking-wider mb-3"
+              style={{
+                color: captchaError ? '#fca5a5' : 'var(--text-primary)',
+                letterSpacing: '0.05em',
+                transition: 'color 0.3s',
+              }}>
               {captcha.question}
             </div>
-            <div className="flex items-center gap-2 justify-center">
+            <div className={`flex items-center gap-2 justify-center ${captchaError ? 'animate-shake' : ''}`}>
               <input
                 type="text"
                 inputMode="numeric"
@@ -815,34 +826,36 @@ function RevealCard({ icon, label, masked, full, href, actionLabel }) {
                 onChange={(e) => { setUserAnswer(e.target.value); setCaptchaError(false) }}
                 onKeyDown={handleInputKey}
                 autoFocus
-                placeholder="输入答案"
-                className="w-24 px-3 py-1.5 text-center text-sm font-mono rounded-md outline-none"
+                placeholder={captchaError ? '重新输入' : '输入答案'}
+                className="w-22 px-3 py-2 text-center text-sm font-mono rounded-md outline-none"
                 style={{
-                  background: 'rgba(255,255,255,0.04)',
+                  background: captchaError
+                    ? 'rgba(248,113,113,0.1)'
+                    : 'rgba(255,255,255,0.04)',
                   border: captchaError
-                    ? '1px solid #f87171'
+                    ? '1.5px solid rgba(248,113,113,0.5)'
                     : '1px solid var(--border-strong)',
-                  color: captchaError ? '#f87171' : 'var(--text-primary)',
-                  transition: 'border-color 0.2s',
+                  color: captchaError ? '#fca5a5' : 'var(--text-primary)',
+                  transition: 'all 0.2s',
+                  boxShadow: captchaError ? '0 0 12px rgba(248,113,113,0.15)' : 'none',
                 }}
               />
               <button
                 onClick={handleVerify}
-                className="px-3 py-1.5 text-xs font-mono font-semibold rounded-md transition-all"
+                className="px-3 py-2 text-xs font-mono font-semibold rounded-md transition-all"
                 style={{
-                  background: 'rgba(45,212,191,0.1)',
-                  border: '1px solid rgba(45,212,191,0.2)',
-                  color: 'var(--accent)',
+                  background: captchaError
+                    ? 'rgba(248,113,113,0.15)'
+                    : 'rgba(45,212,191,0.1)',
+                  border: captchaError
+                    ? '1px solid rgba(248,113,113,0.3)'
+                    : '1px solid rgba(45,212,191,0.2)',
+                  color: captchaError ? '#fca5a5' : 'var(--accent)',
                 }}
               >
                 ↵
               </button>
             </div>
-            {captchaError && (
-              <div className="text-xs mt-2 font-mono animate-shake" style={{ color: '#f87171' }}>
-                ✗ 答案错误，请重试
-              </div>
-            )}
           </div>
         </div>
       )}
