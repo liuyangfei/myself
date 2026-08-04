@@ -803,7 +803,7 @@ function Education() {
       <div className="max-w-6xl mx-auto px-6 relative z-10 text-center">
         <SectionTitle subtitle="EDUCATION" title="教育背景" />
 
-        <div className="sci-card inline-block p-8 md:p-10 min-w-[320px] text-left" data-reveal>
+        <div className="sci-card inline-block p-8 md:p-10 min-w-[320px] text-center" data-reveal>
           <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl mb-5"
             style={{
               background: 'linear-gradient(135deg, rgba(34,211,238,0.15), rgba(167,139,250,0.15))',
@@ -830,7 +830,7 @@ function Education() {
 function Contact() {
   return (
     <section id="contact" className="relative py-20 md:py-28">
-      <div className="max-w-3xl mx-auto px-6 relative z-10">
+      <div className="max-w-3xl mx-auto px-6 relative z-10 text-center">
         <SectionTitle subtitle="CONTACT" title="联系我" />
 
         <p className="mb-10 text-center text-base" style={{ color: 'var(--text-secondary)' }}>
