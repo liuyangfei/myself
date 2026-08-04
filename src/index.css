@@ -541,6 +541,43 @@ body::before {
   box-shadow: 0 0 18px rgba(34, 211, 238, 0.28);
 }
 
+/* 待播放状态：柔和脉冲吸引注意，等待首次点击 */
+.music-toggle.music-pending {
+  color: var(--violet);
+  border-color: rgba(167, 139, 250, 0.4);
+  animation: pendingPulse 2s ease-in-out infinite;
+}
+
+@keyframes pendingPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0.3); }
+  50%      { box-shadow: 0 0 0 9px rgba(167, 139, 250, 0); }
+}
+
+/* 待播放提示气泡 */
+.music-hint {
+  position: fixed;
+  left: 24px;
+  bottom: 84px;
+  z-index: 60;
+  padding: 8px 14px;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--glass-border);
+  border-radius: 9999px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  pointer-events: none;
+  animation: hintIn 0.5s ease-out;
+}
+
+@keyframes hintIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 /* 播放中的均衡器动画条 */
 .eq {
   display: flex;
@@ -679,7 +716,9 @@ body::before {
   .gradient-text,
   .pulse-dot,
   .typing-cursor,
-  .eq i {
+  .eq i,
+  .music-toggle.music-pending,
+  .music-hint {
     animation: none;
   }
 
@@ -717,5 +756,12 @@ body::before {
   .music-toggle {
     left: 16px;
     bottom: 20px;
+  }
+
+  .music-hint {
+    left: 16px;
+    bottom: 72px;
+    font-size: 11px;
+    padding: 7px 12px;
   }
 }

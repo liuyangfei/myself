@@ -459,6 +459,8 @@ class SciFiAudio {
     this.nextNoteTime = 0
     this.step = 0
     this.playing = false
+    this.onPlay = null // 实际出声时回调
+    this.onStop = null // 停止时回调
   }
 
   init() {
@@ -510,8 +512,12 @@ class SciFiAudio {
 
   // 用户首次交互时接管启动（绕过自动播放限制）
   unlock() {
-    if (!this.ctx) return
-    if (this.ctx.state === 'suspended') this.ctx.resume().catch(() => {})
+    if (!this.ctx || !this.playing) return
+    if (this.ctx.state === 'suspended') {
+      this.ctx.resume().catch(() => {})
+      // Safari 的 onstatechange 可能不触发，延迟重试兜底
+      setTimeout(() => this.ensureScheduler(), 120)
+    }
     this.ensureScheduler()
   }
 
@@ -535,10 +541,12 @@ class SciFiAudio {
     }
     tick()
     this.schedulerId = setInterval(tick, 90)
+    this.onPlay?.()
   }
 
   stop() {
     this.playing = false
+    this.onStop?.()
     if (!this.ctx || !this.master) return
     const ctx = this.ctx
     const t = ctx.currentTime
@@ -630,58 +638,73 @@ class SciFiAudio {
 
 /* ==================== 氛围音乐开关 ==================== */
 function MusicToggle() {
-  const [playing, setPlaying] = useState(false)
+  // 三态：stopped 已关闭 / pending 待播放（等待首次手势）/ playing 正在播放
+  const [status, setStatus] = useState('pending')
   const engineRef = useRef(null)
 
-  // 进入页面自动播放：先尝试启动，被浏览器自动播放策略拦截时，
-  // 在用户首次交互（点击/按键）时无缝接管启动
   useEffect(() => {
-    if (!engineRef.current) engineRef.current = new SciFiAudio()
-    const eng = engineRef.current
-    eng.start()
-    setPlaying(true)
+    const eng = new SciFiAudio()
+    engineRef.current = eng
+    eng.onPlay = () => setStatus('playing') // 实际出声
+    eng.onStop = () => setStatus('stopped')
 
-    const unlock = () => {
-      eng.unlock()
-      window.removeEventListener('pointerdown', unlock)
-      window.removeEventListener('keydown', unlock)
-    }
+    // 进入页面自动播放：先尝试启动，被浏览器自动播放策略拦截时
+    // 停留在 pending 状态，用户在任意位置点击/触摸/按键时无缝启动
+    eng.start()
+    setStatus('pending')
+
+    const unlock = () => eng.unlock()
     window.addEventListener('pointerdown', unlock)
+    window.addEventListener('touchstart', unlock)
     window.addEventListener('keydown', unlock)
 
     return () => {
       window.removeEventListener('pointerdown', unlock)
+      window.removeEventListener('touchstart', unlock)
       window.removeEventListener('keydown', unlock)
       eng.stop()
     }
   }, [])
 
   const toggle = () => {
-    if (playing) {
-      engineRef.current?.stop()
-      setPlaying(false)
-      return
+    const eng = engineRef.current
+    if (!eng) return
+    if (status === 'playing') {
+      eng.stop()
+    } else {
+      // pending 或 stopped：点击按钮本身即视为手势，立即解锁并开始
+      eng.unlock()
+      eng.start()
     }
-    if (!engineRef.current) engineRef.current = new SciFiAudio()
-    engineRef.current.start()
-    setPlaying(true)
   }
 
+  const label =
+    status === 'playing' ? '关闭氛围音乐'
+    : status === 'pending' ? '音乐即将开始'
+    : '开启氛围音乐'
+
   return (
-    <button
-      onClick={toggle}
-      className={`music-toggle ${playing ? 'music-playing' : ''}`}
-      aria-label={playing ? '关闭氛围音乐' : '开启氛围音乐'}
-      title={playing ? '关闭氛围音乐' : '开启氛围音乐'}
-    >
-      {playing ? (
-        <span className="eq" aria-hidden="true"><i /><i /><i /></span>
-      ) : (
-        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z" />
-        </svg>
+    <>
+      {status === 'pending' && (
+        <div className="music-hint" role="status">
+          🔊 点击任意位置开启音乐
+        </div>
       )}
-    </button>
+      <button
+        onClick={toggle}
+        className={`music-toggle ${status === 'playing' ? 'music-playing' : ''} ${status === 'pending' ? 'music-pending' : ''}`}
+        aria-label={label}
+        title={label}
+      >
+        {status === 'playing' ? (
+          <span className="eq" aria-hidden="true"><i /><i /><i /></span>
+        ) : (
+          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z" />
+          </svg>
+        )}
+      </button>
+    </>
   )
 }
 
