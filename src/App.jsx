@@ -465,6 +465,10 @@ class SciFiAudio {
     if (this.ctx) return
     const ctx = new (window.AudioContext || window.webkitAudioContext)()
     this.ctx = ctx
+    // 上下文从未暂停→运行（首次手势/解除自动播放限制）时启动音序器
+    ctx.onstatechange = () => {
+      if (ctx.state === 'running') this.ensureScheduler()
+    }
 
     // 主输出
     const master = ctx.createGain()
@@ -493,7 +497,7 @@ class SciFiAudio {
   start() {
     if (!this.ctx) this.init()
     const ctx = this.ctx
-    if (ctx.state === 'suspended') ctx.resume()
+    if (ctx.state === 'suspended') ctx.resume().catch(() => {})
     this.playing = true
 
     // 主音量淡入
@@ -501,7 +505,21 @@ class SciFiAudio {
     this.master.gain.setValueAtTime(this.master.gain.value, ctx.currentTime)
     this.master.gain.linearRampToValueAtTime(1, ctx.currentTime + 1.6)
 
-    if (this.schedulerId) return
+    this.ensureScheduler()
+  }
+
+  // 用户首次交互时接管启动（绕过自动播放限制）
+  unlock() {
+    if (!this.ctx) return
+    if (this.ctx.state === 'suspended') this.ctx.resume().catch(() => {})
+    this.ensureScheduler()
+  }
+
+  // 仅当上下文真正运行时才启动音序器
+  ensureScheduler() {
+    if (!this.playing || !this.ctx || this.schedulerId) return
+    if (this.ctx.state !== 'running') return
+    const ctx = this.ctx
     this.nextNoteTime = ctx.currentTime + 0.1
     this.step = 0
     const spb = SciFiAudio.STEP_DUR
@@ -615,8 +633,27 @@ function MusicToggle() {
   const [playing, setPlaying] = useState(false)
   const engineRef = useRef(null)
 
-  useEffect(() => () => {
-    engineRef.current?.stop()
+  // 进入页面自动播放：先尝试启动，被浏览器自动播放策略拦截时，
+  // 在用户首次交互（点击/按键）时无缝接管启动
+  useEffect(() => {
+    if (!engineRef.current) engineRef.current = new SciFiAudio()
+    const eng = engineRef.current
+    eng.start()
+    setPlaying(true)
+
+    const unlock = () => {
+      eng.unlock()
+      window.removeEventListener('pointerdown', unlock)
+      window.removeEventListener('keydown', unlock)
+    }
+    window.addEventListener('pointerdown', unlock)
+    window.addEventListener('keydown', unlock)
+
+    return () => {
+      window.removeEventListener('pointerdown', unlock)
+      window.removeEventListener('keydown', unlock)
+      eng.stop()
+    }
   }, [])
 
   const toggle = () => {
