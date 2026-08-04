@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+/* ===== 全局自定义样式 ===== */
+html {
+  scroll-behavior: smooth;
+}
+::selection {
+  background-color: #3b82f6;
+  color: #fff;
+}
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #f1f5f9; }
+::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #64748b; }
+
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-bg {
+  background: linear-gradient(135deg, #eff6ff 0%, #f5f3ff 50%, #fdf2f8 100%);
+}
+
+.card-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px -8px rgba(59, 130, 246, 0.15);
+}
+
+.skill-tag {
+  transition: all 0.2s ease;
+}
+.skill-tag:hover {
+  transform: scale(1.08);
+}
+
+/* 经验时间线 */
+.timeline-line {
+  position: relative;
+}
+.timeline-line::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, #3b82f6, #8b5cf6, #ec4899);
+}
+.timeline-dot {
+  position: relative;
+}
+.timeline-dot::before {
+  content: "";
+  position: absolute;
+  left: -7px;
+  top: 8px;
+  width: 16px;
+  height: 16px;
+  background: #3b82f6;
+  border-radius: 50%;
+  border: 3px solid #dbeafe;
+  z-index: 1;
+}
+
+/* 淡入动画 */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: fadeInUp 0.6s ease forwards;
+}
