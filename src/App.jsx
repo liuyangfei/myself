@@ -14,30 +14,37 @@ const NAV_ITEMS = [
 const SKILL_CATEGORIES = [
   {
     title: '后端开发',
+    icon: '▚',
     skills: ['Java', 'SpringBoot', 'SpringCloud', 'gRPC', 'Netty', 'DDD', '微服务治理'],
   },
   {
     title: '前端开发',
+    icon: '◈',
     skills: ['React', 'Vue'],
   },
   {
     title: '数据库 & 缓存',
+    icon: '⬡',
     skills: ['MySQL 分库分表', 'Redis', 'ShardingSphere', 'MongoDB'],
   },
   {
     title: '消息中间件',
+    icon: '⟁',
     skills: ['RabbitMQ', 'RocketMQ', 'CMQ', 'Kafka'],
   },
   {
     title: 'DevOps & 云平台',
+    icon: '⌁',
     skills: ['K8s', 'Docker', 'Nginx', 'Linux', 'Jenkins', 'Git', 'Maven', 'Nacos', 'XxlJob', '云厂商'],
   },
   {
     title: '金融业务',
+    icon: '✦',
     skills: ['人行征信', '监管报送', '贷中风控', '信贷保障', '保险对接', '海外征信'],
   },
   {
     title: 'AI & 新技术',
+    icon: '⟡',
     skills: ['AI Coding', 'Agent'],
   },
 ]
@@ -221,7 +228,8 @@ export default function App() {
   useScrollReveal()
 
   return (
-    <div className="min-h-screen bg-[#06101f] text-[#e8f1ff]">
+    <div className="min-h-screen bg-[#07080d] text-[#eceef5]">
+      <Aurora />
       <div className="sci-fi-root">
         <Navbar mobileOpen={mobileOpen} onToggle={() => setMobileOpen(!mobileOpen)} active={active} />
         <Hero />
@@ -234,6 +242,19 @@ export default function App() {
         <Footer />
         <BackToTop />
       </div>
+    </div>
+  )
+}
+
+/* ==================== 极光背景 ==================== */
+function Aurora() {
+  return (
+    <div className="aurora" aria-hidden="true">
+      <div className="aurora-blob aurora-1" />
+      <div className="aurora-blob aurora-2" />
+      <div className="aurora-blob aurora-3" />
+      <div className="aurora-blob aurora-4" />
+      <div className="aurora-particles" />
     </div>
   )
 }
@@ -417,24 +438,17 @@ function Navbar({ mobileOpen, onToggle, active }) {
   return (
     <nav className="sci-nav">
       <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
-        <a href="#top" className="flex items-baseline gap-2.5 group">
-          <span className="text-base font-bold tracking-[0.18em]" style={{ color: 'var(--accent)' }}>
-            LYF
-          </span>
-          <span className="hidden sm:inline font-mono text-[9px] tracking-[0.3em] uppercase"
-            style={{ color: 'var(--text-muted)' }}>
-            LIU YANG FEI
-          </span>
+        <a href="#top" className="flex items-center gap-2.5 group">
+          <span className="text-base font-bold tracking-[0.18em] gradient-text">LYF</span>
         </a>
 
-        <ul className="hidden md:flex gap-7 text-sm">
-          {NAV_ITEMS.map((item, i) => (
+        <ul className="hidden md:flex gap-1 text-sm">
+          {NAV_ITEMS.map((item) => (
             <li key={item.href}>
               <a
                 href={item.href}
                 className={`sci-nav-link ${active === item.href.slice(1) ? 'sci-nav-link-active' : ''}`}
               >
-                <span className="nav-num">{String(i + 1).padStart(2, '0')}</span>
                 {item.label}
               </a>
             </li>
@@ -454,12 +468,11 @@ function Navbar({ mobileOpen, onToggle, active }) {
       </div>
 
       {mobileOpen && (
-        <div className="md:hidden px-6 pb-4"
-          style={{ background: 'rgba(6,16,31,0.95)', borderBottom: '1px solid var(--line)' }}>
-          {NAV_ITEMS.map((item, i) => (
-            <a key={item.href} href={item.href} className="block py-3 sci-nav-link"
+        <div className="md:hidden px-4 pb-4"
+          style={{ background: 'rgba(7,8,13,0.92)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+          {NAV_ITEMS.map((item) => (
+            <a key={item.href} href={item.href} className="block py-2.5 sci-nav-link"
               onClick={() => setMobileOpen(false)}>
-              <span className="nav-num">{String(i + 1).padStart(2, '0')}</span>
               {item.label}
             </a>
           ))}
@@ -473,49 +486,42 @@ function Navbar({ mobileOpen, onToggle, active }) {
 function Hero() {
   return (
     <section id="top" className="relative min-h-screen flex items-center justify-center pt-14 overflow-hidden">
-      {/* 图纸框 */}
-      <div className="hero-frame absolute inset-x-6 md:inset-x-14 top-20 bottom-16 pointer-events-none opacity-60">
-        <div className="hero-corner tl" />
-        <div className="hero-corner tr" />
-        <div className="hero-corner bl" />
-        <div className="hero-corner br" />
-      </div>
-
       <div className="relative z-10 max-w-4xl mx-auto px-6 py-24 text-center">
-        {/* 图号 */}
-        <div className="hero-meta mb-6 animate-fade-in">
-          DWG NO. LYF-001 <span className="mx-2 opacity-40">//</span> REV A
+        {/* 标识 */}
+        <div className="glass-pill animate-fade-in inline-flex items-center gap-2.5 px-4 py-2 rounded-full mb-8">
+          <span className="pulse-dot" />
+          <span className="text-xs font-medium tracking-[0.25em] uppercase"
+            style={{ color: 'var(--text-secondary)' }}>
+            Java Backend Engineer
+          </span>
         </div>
 
         {/* 名字 */}
-        <h1 className="animate-fade-in animate-delay-1 mb-5">
-          <span className="hero-name">刘洋飞</span>
+        <h1 className="animate-fade-in animate-delay-1 mb-6">
+          <span className="hero-title gradient-text">刘洋飞</span>
         </h1>
 
-        {/* 英文标识 */}
-        <div className="hero-meta animate-fade-in animate-delay-2 mb-8"
-          style={{ color: 'var(--accent)', letterSpacing: '0.4em', fontSize: '0.8rem' }}>
-          LIU YANG FEI
-        </div>
-
-        {/* 角色行（打字机） */}
-        <p className="animate-fade-in animate-delay-2 text-lg md:text-xl mb-3 font-mono"
+        {/* 副标题 */}
+        <p className="animate-fade-in animate-delay-2 text-lg md:text-xl mb-3"
           style={{ color: 'var(--text-secondary)', minHeight: '1.8em' }}>
-          <span style={{ color: 'var(--text-muted)' }}>&gt;_ </span>
-          <Typewriter text="Java 后端开发工程师 · 12 年经验" />
+          <Typewriter text="Java 后端开发工程师 · 12 年经验 · 深圳" />
+        </p>
+        <p className="animate-fade-in animate-delay-2 text-sm md:text-base mb-10"
+          style={{ color: 'var(--text-muted)' }}>
+          专注高可用分布式系统 · DDD 领域驱动设计 · AI 应用开发
         </p>
 
-        {/* 技术标签行 */}
-        <div className="animate-fade-in animate-delay-3 flex flex-wrap justify-center gap-2 mb-12">
-          {['DDD', 'FIN-TECH', 'HIGH-CONCURRENCY', 'AI CODING', 'SHENZHEN'].map((t) => (
-            <span key={t} className="hero-tag">{t}</span>
+        {/* 技术标签 */}
+        <div className="animate-fade-in animate-delay-2 flex flex-wrap justify-center gap-2 mb-12">
+          {['DDD', 'FIN-TECH', 'HIGH-CONCURRENCY', 'AI CODING'].map((t) => (
+            <span key={t} className="sci-chip">{t}</span>
           ))}
         </div>
 
         {/* CTA */}
         <div className="animate-fade-in animate-delay-3 flex flex-wrap justify-center gap-4">
-          <a href="#contact" className="sci-btn-primary">联系我 <span aria-hidden>▸</span></a>
-          <a href="#experience" className="sci-btn-ghost">查看经历 <span aria-hidden>→</span></a>
+          <a href="#contact" className="sci-btn-primary">联系我</a>
+          <a href="#experience" className="sci-btn-ghost">查看经历</a>
         </div>
       </div>
     </section>
@@ -527,44 +533,35 @@ function About({ stats }) {
   return (
     <section id="about" className="relative py-20 md:py-28">
       <div className="max-w-6xl mx-auto px-6 relative z-10">
-        <SectionTitle index="01" subtitle="ABOUT" title="自我评价" />
+        <SectionTitle subtitle="ABOUT" title="自我评价" />
 
-        <div className="grid md:grid-cols-2 gap-8 items-start">
+        <div className="grid md:grid-cols-2 gap-6 items-start">
           {/* 左侧文字 */}
           <div className="sci-card p-7 md:p-9" data-reveal>
-            <div className="flex items-center gap-3 mb-5">
-              <span className="font-mono text-[10px] tracking-[0.25em] uppercase"
-                style={{ color: 'var(--text-muted)' }}>
-                SPEC-01 // PROFILE
-              </span>
-              <span className="flex-1 h-px" style={{ background: 'var(--line)' }} />
-            </div>
-            <p className="text-[#a9c3de] text-base leading-relaxed mb-5">
-              <strong style={{ color: 'var(--accent-soft)' }}>12 年</strong> Java 后端开发经验，具备
-              技术架构设计、团队核心开发与跨系统项目管理等综合能力。
+            <p className="text-[#a7abb8] text-base leading-relaxed mb-5">
+              <strong className="gradient-text" style={{ WebkitTextFillColor: 'var(--cyan)' }}>12 年</strong>{' '}
+              Java 后端开发经验，具备技术架构设计、团队核心开发与跨系统项目管理等综合能力。
             </p>
-            <p className="text-[#a9c3de] text-base leading-relaxed mb-5">
+            <p className="text-[#a7abb8] text-base leading-relaxed mb-5">
               擅长将 <strong style={{ color: 'var(--text-primary)' }}>DDD 设计理念</strong> 落地于
               复杂金融业务场景，主导多次 C++ 至 Java 系统重构，
-              善于利用 <strong style={{ color: 'var(--accent)' }}>AI 工具（AI Coding）</strong> 赋能团队效能提升。
+              善于利用 <strong style={{ color: 'var(--cyan)' }}>AI 工具（AI Coding）</strong> 赋能团队效能提升。
             </p>
-            <p className="text-[#a9c3de] text-base leading-relaxed">
+            <p className="text-[#a7abb8] text-base leading-relaxed">
               持有公司 <strong style={{ color: 'var(--text-primary)' }}>"性能优化奖"</strong> 与
               <strong style={{ color: 'var(--text-primary)' }}>"文化先锋"</strong> 荣誉。
             </p>
           </div>
 
           {/* 右侧统计 */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-4">
             {stats.map((stat, i) => (
               <div key={stat.label} className="sci-card p-6 text-center"
                 data-reveal style={{ '--reveal-delay': `${i * 100}ms` }}>
                 <div className="sci-stat-value">
                   <CountUp value={stat.value} unit={stat.unit} />
                 </div>
-                <div className="mt-3 h-px w-10 mx-auto" style={{ background: 'var(--line-strong)' }} />
-                <div className="text-[10px] mt-2.5 font-mono tracking-[0.2em]"
-                  style={{ color: 'var(--text-muted)' }}>
+                <div className="text-xs mt-2 tracking-wide" style={{ color: 'var(--text-muted)' }}>
                   {stat.label}
                 </div>
               </div>
@@ -581,18 +578,18 @@ function Skills({ categories }) {
   return (
     <section id="skills" className="relative py-20 md:py-28" style={{ background: 'var(--bg-surface)' }}>
       <div className="max-w-6xl mx-auto px-6 relative z-10">
-        <SectionTitle index="02" subtitle="SKILLS" title="专业技能" />
+        <SectionTitle subtitle="SKILLS" title="专业技能" />
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           {categories.map((cat, i) => (
-            <div key={cat.title} className="skill-cat-card sci-card p-5"
+            <div key={cat.title} className="skill-cat-card sci-card p-6"
               data-reveal style={{ '--reveal-delay': `${(i % 3) * 100}ms` }}>
-              <h3 className="font-mono text-xs font-semibold tracking-[0.15em] mb-4 flex items-center gap-2"
+              <h3 className="text-sm font-semibold mb-4 flex items-center gap-2"
                 style={{ color: 'var(--text-primary)' }}>
-                <span style={{ color: 'var(--accent)' }}>▚</span>
-                {cat.title.toUpperCase()}
+                <span className="gradient-text" style={{ fontSize: '1rem' }}>{cat.icon}</span>
+                {cat.title}
               </h3>
-              <div className="flex flex-wrap gap-1.5">
+              <div className="flex flex-wrap gap-2">
                 {cat.skills.map((skill) => (
                   <span key={skill} className="sci-chip">{skill}</span>
                 ))}
@@ -610,18 +607,17 @@ function Experience({ experiences }) {
   return (
     <section id="experience" className="relative py-20 md:py-28">
       <div className="max-w-3xl mx-auto px-6 relative z-10">
-        <SectionTitle index="03" subtitle="EXPERIENCE" title="工作经历" />
+        <SectionTitle subtitle="EXPERIENCE" title="工作经历" />
 
         <div className="sci-timeline pl-14">
           {experiences.map((exp, i) => (
             <div key={i} className="relative mb-9 group" data-reveal>
-              {/* 菱形节点 + 连接线 */}
+              {/* 节点 */}
               <span className={`tl-node ${i === 0 ? 'tl-node-active' : ''}`} />
-              <span className="tl-connector" />
 
               {/* 时间 */}
-              <span className="inline-block font-mono text-xs tracking-[0.15em] mb-2.5"
-                style={{ color: 'var(--accent)' }}>
+              <span className="inline-block text-xs font-mono tracking-wider mb-2.5"
+                style={{ color: 'var(--cyan)' }}>
                 {exp.period}
               </span>
 
@@ -642,16 +638,18 @@ function Experience({ experiences }) {
                   {exp.highlights.map((h, j) => (
                     <li key={j} className="flex items-start gap-2.5 text-sm leading-relaxed"
                       style={{ color: 'var(--text-secondary)' }}>
-                      <span className="mt-1.5 flex-shrink-0 font-mono"
-                        style={{ color: 'var(--accent)', fontSize: '0.6rem' }}>◆</span>
+                      <span className="mt-1.5 flex-shrink-0" style={{
+                        width: 5, height: 5, borderRadius: '50%',
+                        background: 'var(--cyan)', opacity: 0.7,
+                      }} />
                       <span>{h}</span>
                     </li>
                   ))}
                 </ul>
 
                 {exp.metrics && (
-                  <div className="mt-4 pt-3.5 flex flex-wrap gap-2"
-                    style={{ borderTop: '1px solid var(--line)' }}>
+                  <div className="mt-4 pt-4 flex flex-wrap gap-2"
+                    style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
                     {exp.metrics.map((m, k) => (
                       <div key={k} className="metric-badge">
                         <span className="metric-value">{m.value}</span>
@@ -674,31 +672,30 @@ function Projects({ projects }) {
   return (
     <section id="projects" className="relative py-20 md:py-28" style={{ background: 'var(--bg-surface)' }}>
       <div className="max-w-6xl mx-auto px-6 relative z-10">
-        <SectionTitle index="04" subtitle="PROJECTS" title="项目经历" />
+        <SectionTitle subtitle="PROJECTS" title="项目经历" />
 
         <div className="grid md:grid-cols-2 gap-4">
           {projects.map((proj, i) => (
-            <div key={proj.name} className="sci-card p-5 md:p-6 flex flex-col"
+            <div key={proj.name} className="sci-card p-6 flex flex-col"
               data-reveal style={{ '--reveal-delay': `${(i % 2) * 100}ms` }}>
-              {/* 标题 + 角色 */}
               <div className="flex items-start justify-between gap-3 mb-1">
                 <h3 className="text-base font-semibold" style={{ color: 'var(--text-primary)' }}>
                   {proj.name}
                 </h3>
                 {proj.role && (
-                  <span className="font-mono text-[10px] px-2 py-1 tracking-[0.12em] flex-shrink-0"
+                  <span className="text-xs px-2.5 py-1 rounded-full flex-shrink-0 font-mono"
                     style={{
-                      color: 'var(--accent-soft)',
-                      background: 'var(--accent-dim)',
-                      border: '1px solid var(--line-strong)',
+                      color: 'var(--cyan)',
+                      background: 'rgba(34,211,238,0.08)',
+                      border: '1px solid rgba(34,211,238,0.2)',
                     }}>
                     {proj.role}
                   </span>
                 )}
               </div>
 
-              <p className="font-mono text-xs mb-3 tracking-[0.1em]"
-                style={{ color: 'var(--accent)', opacity: 0.75 }}>
+              <p className="text-xs font-mono tracking-wider mb-3"
+                style={{ color: 'var(--cyan)', opacity: 0.8 }}>
                 {proj.period}
               </p>
 
@@ -710,7 +707,9 @@ function Projects({ projects }) {
 
               <div className="flex flex-wrap gap-1.5 mb-3.5">
                 {proj.tech.map((t) => (
-                  <span key={t} className="sci-chip">{t}</span>
+                  <span key={t} className="sci-chip" style={{ fontSize: '0.72rem', padding: '4px 11px' }}>
+                    {t}
+                  </span>
                 ))}
               </div>
 
@@ -718,8 +717,10 @@ function Projects({ projects }) {
                 {proj.achievements.map((a, j) => (
                   <li key={j} className="flex items-start gap-2.5 text-sm leading-relaxed"
                     style={{ color: 'var(--text-secondary)' }}>
-                    <span className="mt-1 flex-shrink-0 font-mono" style={{ color: 'var(--accent)', fontSize: '0.6rem' }}>
-                      ▸
+                    <span className="mt-1 flex-shrink-0" style={{ color: 'var(--cyan)' }}>
+                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                      </svg>
                     </span>
                     <span>{a}</span>
                   </li>
@@ -738,15 +739,15 @@ function Education() {
   return (
     <section className="relative py-20 md:py-28">
       <div className="max-w-6xl mx-auto px-6 relative z-10">
-        <SectionTitle index="05" subtitle="EDUCATION" title="教育背景" />
+        <SectionTitle subtitle="EDUCATION" title="教育背景" />
 
         <div className="sci-card inline-block p-8 md:p-10 min-w-[320px] text-left" data-reveal>
-          <div className="flex items-center gap-3 mb-4">
-            <span className="font-mono text-[10px] tracking-[0.25em] uppercase"
-              style={{ color: 'var(--text-muted)' }}>
-              CERT-05 // DEGREE
-            </span>
-            <span className="flex-1 h-px" style={{ background: 'var(--line)' }} />
+          <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl mb-5"
+            style={{
+              background: 'linear-gradient(135deg, rgba(34,211,238,0.15), rgba(167,139,250,0.15))',
+              border: '1px solid rgba(255,255,255,0.1)',
+            }}>
+            🎓
           </div>
           <h3 className="text-lg font-semibold mb-1.5" style={{ color: 'var(--text-primary)' }}>
             郑州轻工业大学
@@ -754,7 +755,7 @@ function Education() {
           <p className="text-sm mb-2" style={{ color: 'var(--text-secondary)' }}>
             计算机科学与技术 · 本科 · 统招
           </p>
-          <p className="font-mono text-sm tracking-[0.15em]" style={{ color: 'var(--accent)' }}>
+          <p className="text-sm font-mono tracking-wider" style={{ color: 'var(--cyan)' }}>
             2010.09 — 2014.07
           </p>
         </div>
@@ -768,10 +769,9 @@ function Contact() {
   return (
     <section id="contact" className="relative py-20 md:py-28">
       <div className="max-w-3xl mx-auto px-6 relative z-10">
-        <SectionTitle index="06" subtitle="CONTACT" title="联系我" />
+        <SectionTitle subtitle="CONTACT" title="联系我" />
 
-        <p className="mb-10 text-base font-mono tracking-wide" style={{ color: 'var(--text-secondary)' }}>
-          <span style={{ color: 'var(--text-muted)' }}>&gt;_ </span>
+        <p className="mb-10 text-center text-base" style={{ color: 'var(--text-secondary)' }}>
           如果您对我的背景感兴趣，欢迎随时联系
         </p>
 
@@ -798,11 +798,11 @@ function Contact() {
           </div>
         </div>
 
-        <div className="inline-flex items-center gap-2 px-5 py-2.5 font-mono text-sm"
-          data-reveal style={{ '--reveal-delay': '150ms', border: '1px solid var(--line)' }}>
-          <span style={{ color: 'var(--text-muted)' }}>LOC:</span>
+        <div className="glass-pill inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm"
+          data-reveal style={{ '--reveal-delay': '150ms' }}>
+          <span style={{ color: 'var(--text-muted)' }}>📍</span>
           <span style={{ color: 'var(--text-secondary)' }}>
-            深圳 <span className="opacity-50">/ SHENZHEN</span>
+            期望地区：<strong style={{ color: 'var(--cyan)' }}>深圳</strong>
           </span>
         </div>
       </div>
@@ -961,8 +961,8 @@ function RevealCard({ icon, label, masked, full, href, actionLabel }) {
       tabIndex={0}
       onKeyDown={(e) => { if (e.key === 'Enter') handleCardClick() }}
     >
-      <div className="w-10 h-10 rounded-[2px] flex items-center justify-center text-lg flex-shrink-0"
-        style={{ background: 'var(--accent-dim)', border: '1px solid var(--line-strong)' }}>
+      <div className="w-10 h-10 rounded-xl flex items-center justify-center text-lg flex-shrink-0"
+        style={{ background: 'rgba(34,211,238,0.08)', border: '1px solid rgba(34,211,238,0.18)' }}>
         {icon}
       </div>
 
@@ -971,7 +971,7 @@ function RevealCard({ icon, label, masked, full, href, actionLabel }) {
           {label}
         </div>
         <div className="font-mono text-sm font-medium transition-all duration-300"
-          style={{ color: revealed ? 'var(--accent-soft)' : 'var(--text-muted)' }}>
+          style={{ color: revealed ? 'var(--cyan)' : 'var(--text-muted)' }}>
           {revealed ? full : masked}
         </div>
       </div>
@@ -979,25 +979,25 @@ function RevealCard({ icon, label, masked, full, href, actionLabel }) {
       {/* 右侧状态区 */}
       <div className="flex items-center gap-1.5 flex-shrink-0">
         {!revealed && !locked && (
-          <span className="font-mono text-xs tracking-wider"
+          <span className="text-xs font-mono tracking-wider"
             style={{ color: 'var(--text-muted)', opacity: 0.55 }}>
             点击查看
           </span>
         )}
 
         {locked && (
-          <span className="font-mono text-xs animate-shake" style={{ color: '#f87171' }}>
+          <span className="text-xs font-mono animate-shake" style={{ color: '#f87171' }}>
             🔒 {lockLeft}s
           </span>
         )}
 
         {revealed && (
           <>
-            <button onClick={handleCopy} className="w-7 h-7 flex items-center justify-center rounded-[2px] transition-all"
+            <button onClick={handleCopy} className="w-7 h-7 flex items-center justify-center rounded-full transition-all"
               style={{
-                background: copied ? 'var(--accent-dim)' : 'rgba(255,255,255,0.02)',
-                border: copied ? '1px solid var(--accent)' : '1px solid var(--line)',
-                color: copied ? 'var(--accent-soft)' : 'var(--text-muted)',
+                background: copied ? 'rgba(34,211,238,0.12)' : 'rgba(255,255,255,0.02)',
+                border: copied ? '1px solid rgba(34,211,238,0.4)' : '1px solid rgba(255,255,255,0.1)',
+                color: copied ? 'var(--cyan)' : 'var(--text-muted)',
               }} title="复制">
               {copied ? (
                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1010,8 +1010,8 @@ function RevealCard({ icon, label, masked, full, href, actionLabel }) {
               )}
             </button>
             <a href={href} onClick={(e) => e.stopPropagation()}
-              className="w-7 h-7 flex items-center justify-center rounded-[2px] transition-all"
-              style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--line)', color: 'var(--text-muted)' }}
+              className="w-7 h-7 flex items-center justify-center rounded-full transition-all"
+              style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.1)', color: 'var(--text-muted)' }}
               title={actionLabel}>
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -1063,9 +1063,9 @@ function RevealCard({ icon, label, masked, full, href, actionLabel }) {
                       background: captchaError ? 'rgba(248,113,113,0.08)' : 'rgba(255,255,255,0.03)',
                       border: captchaError
                         ? '1.5px solid rgba(248,113,113,0.5)'
-                        : '1px solid var(--line-strong)',
+                        : '1px solid rgba(255,255,255,0.12)',
                       color: 'var(--text-primary)',
-                      borderRadius: '2px',
+                      borderRadius: '12px',
                       transition: 'all 0.2s',
                       boxShadow: captchaError ? '0 0 12px rgba(248,113,113,0.15)' : 'none',
                     }}
@@ -1074,10 +1074,10 @@ function RevealCard({ icon, label, masked, full, href, actionLabel }) {
                     onClick={handleVerify}
                     className="px-4 py-2.5 font-mono text-sm font-semibold transition-all"
                     style={{
-                      background: 'var(--accent-dim)',
-                      border: '1px solid var(--line-strong)',
-                      color: 'var(--accent-soft)',
-                      borderRadius: '2px',
+                      background: 'linear-gradient(120deg, rgba(34,211,238,0.15), rgba(167,139,250,0.15))',
+                      border: '1px solid rgba(34,211,238,0.3)',
+                      color: 'var(--cyan)',
+                      borderRadius: '12px',
                     }}
                   >
                     验证
@@ -1104,19 +1104,14 @@ function RevealCard({ icon, label, masked, full, href, actionLabel }) {
   )
 }
 
-/* ==================== 页脚（蓝图审批章） ==================== */
+/* ==================== 页脚 ==================== */
 function Footer() {
   return (
     <footer className="sci-footer py-10 text-center">
       <div className="max-w-6xl mx-auto px-6">
-        <div className="mb-4">
-          <div className="blueprint-stamp">
-            <span className="stamp-ring">Approved</span>
-            <span>刘洋飞</span>
-          </div>
-        </div>
-        <p className="font-mono text-xs tracking-[0.2em]" style={{ color: 'var(--text-muted)', opacity: 0.7 }}>
-          © {new Date().getFullYear()} LIU YANG FEI · DWG NO. LYF-{new Date().getFullYear()}-001
+        <div className="text-base font-bold tracking-[0.2em] gradient-text mb-3">LYF</div>
+        <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
+          © {new Date().getFullYear()} 刘洋飞 · Java Backend Engineer
         </p>
       </div>
     </footer>
@@ -1124,19 +1119,12 @@ function Footer() {
 }
 
 /* ==================== 通用组件: 区块标题 ==================== */
-function SectionTitle({ subtitle, title, index }) {
+function SectionTitle({ subtitle, title }) {
   return (
-    <div className="sci-section-head">
-      <div className="flex items-start gap-4">
-        <span className="sci-section-index">SYS-{index}</span>
-        <div>
-          <div className="sci-section-label">{subtitle}</div>
-          <h2 className="sci-section-title">{title}</h2>
-        </div>
-      </div>
-      <div className="sci-dim-line">
-        <span className="dim-tick" />
-      </div>
+    <div className="text-center mb-12">
+      <span className="sci-section-label">{subtitle}</span>
+      <h2 className="sci-section-title">{title}</h2>
+      <div className="sci-divider" />
     </div>
   )
 }
