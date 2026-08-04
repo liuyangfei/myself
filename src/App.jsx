@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
 /* ========== 导航栏数据 ========== */
@@ -508,6 +508,8 @@ class SciFiAudio {
     this.master.gain.linearRampToValueAtTime(1, ctx.currentTime + 1.6)
 
     this.ensureScheduler()
+    // 兜底：部分浏览器 resume() 异步完成，延迟再试一次
+    setTimeout(() => this.ensureScheduler(), 120)
   }
 
   // 用户首次交互时接管启动（绕过自动播放限制）
@@ -642,40 +644,60 @@ function MusicToggle() {
   const [status, setStatus] = useState('pending')
   const engineRef = useRef(null)
 
-  useEffect(() => {
-    const eng = new SciFiAudio()
-    engineRef.current = eng
-    eng.onPlay = () => setStatus('playing') // 实际出声
-    eng.onStop = () => setStatus('stopped')
-
-    // 进入页面自动播放：先尝试启动，被浏览器自动播放策略拦截时
-    // 停留在 pending 状态，用户在任意位置点击/触摸/按键时无缝启动
-    eng.start()
-    setStatus('pending')
-
-    const unlock = () => eng.unlock()
-    window.addEventListener('pointerdown', unlock)
-    window.addEventListener('touchstart', unlock)
-    window.addEventListener('keydown', unlock)
-
-    return () => {
-      window.removeEventListener('pointerdown', unlock)
-      window.removeEventListener('touchstart', unlock)
-      window.removeEventListener('keydown', unlock)
-      eng.stop()
+  // 在用户手势内同步创建 AudioContext 并启动。
+  // iOS Safari 强制要求音频必须在用户手势内创建/恢复，
+  // 提前创建再在点击时 resume() 可能永远无法出声。
+  const startMusic = useCallback(() => {
+    let eng = engineRef.current
+    if (!eng) {
+      try {
+        eng = new SciFiAudio()
+        eng.onPlay = () => setStatus('playing') // 实际出声
+        eng.onStop = () => setStatus('stopped')
+        engineRef.current = eng
+      } catch {
+        return
+      }
     }
+    eng.unlock()
+    eng.start()
   }, [])
 
-  const toggle = () => {
-    const eng = engineRef.current
-    if (!eng) return
-    if (status === 'playing') {
-      eng.stop()
-    } else {
-      // pending 或 stopped：点击按钮本身即视为手势，立即解锁并开始
-      eng.unlock()
-      eng.start()
+  useEffect(() => {
+    // 首次手势（任意位置点击/触摸/按键）即启动，之后移除监听
+    const ensure = () => {
+      startMusic()
+      detach()
     }
+    const attach = () => {
+      window.addEventListener('pointerdown', ensure, true)
+      window.addEventListener('touchstart', ensure, true)
+      window.addEventListener('touchend', ensure, true)
+      window.addEventListener('click', ensure, true)
+      window.addEventListener('keydown', ensure, true)
+    }
+    const detach = () => {
+      window.removeEventListener('pointerdown', ensure, true)
+      window.removeEventListener('touchstart', ensure, true)
+      window.removeEventListener('touchend', ensure, true)
+      window.removeEventListener('click', ensure, true)
+      window.removeEventListener('keydown', ensure, true)
+    }
+    attach()
+
+    return () => {
+      detach()
+      engineRef.current?.stop()
+    }
+  }, [startMusic])
+
+  const toggle = () => {
+    if (status === 'playing') {
+      engineRef.current?.stop()
+      return
+    }
+    // pending 或 stopped：按钮点击本身即手势，直接启动
+    startMusic()
   }
 
   const label =
