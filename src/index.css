@@ -1,25 +1,26 @@
 @import "tailwindcss";
 
 /* ============================================================
-   科幻主题 CSS — Cyber-Neon Holographic Design System
+   成熟科技风 — Refined Tech Design System
+   设计参考: Linear / Stripe / Vercel
    ============================================================ */
 
-/* ---- CSS 变量：调色板 ---- */
 :root {
-  --bg-deep:    #0a0a0f;
-  --bg-surface: #0f0f1a;
-  --bg-card:    rgba(15, 15, 30, 0.75);
-  --border-subtle: rgba(0, 240, 255, 0.12);
-  --border-glow:   rgba(0, 240, 255, 0.35);
-  --cyan:       #00f0ff;
-  --cyan-dim:   rgba(0, 240, 255, 0.15);
-  --magenta:    #d946ef;
-  --purple:     #7b2fff;
-  --gold:       #fbbf24;
-  --green:      #34d399;
-  --text-primary:   #e2e8f0;
-  --text-secondary: #94a3b8;
-  --text-muted:     #64748b;
+  --bg-deep:       #08080c;
+  --bg-surface:    #0f0f16;
+  --bg-card:       rgba(255, 255, 255, 0.025);
+  --bg-card-hover: rgba(255, 255, 255, 0.04);
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-strong: rgba(255, 255, 255, 0.10);
+  --accent:        #2dd4bf;
+  --accent-dim:    rgba(45, 212, 191, 0.10);
+  --accent-glow:   rgba(45, 212, 191, 0.15);
+  --text-primary:  #e4e4e7;
+  --text-secondary:#a1a1aa;
+  --text-muted:    #71717a;
+  --radius-sm:     8px;
+  --radius-md:     14px;
+  --radius-lg:     20px;
 }
 
 /* ---- 全局基础 ---- */
@@ -29,389 +30,264 @@ html {
 }
 
 ::selection {
-  background: var(--cyan);
+  background: var(--accent);
   color: #000;
 }
 
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: var(--bg-deep); }
-::-webkit-scrollbar-thumb { background: var(--cyan-dim); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--border-glow); }
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.15); }
 
 body {
   margin: 0;
-  font-family: 'Inter', 'SF Mono', 'Fira Code', system-ui, -apple-system, sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   background: var(--bg-deep);
   color: var(--text-primary);
-  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
 }
 
-/* ---- 星空网格背景 ---- */
+/* ---- 细微网格背景 ---- */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background:
-    /* 网格线 */
-    linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
-  background-size: 60px 60px;
-  mask-image: radial-gradient(ellipse 70% 70% at 50% 30%, black 40%, transparent 70%);
-  -webkit-mask-image: radial-gradient(ellipse 70% 70% at 50% 30%, black 40%, transparent 70%);
+  background-image:
+    radial-gradient(circle, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 60% 60% at 50% 20%, black 30%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse 60% 60% at 50% 20%, black 30%, transparent 70%);
 }
 
-/* ---- 浮动粒子 ---- */
-@keyframes particleDrift {
-  0%   { transform: translateY(0) translateX(0); opacity: 0; }
-  10%  { opacity: 1; }
-  90%  { opacity: 1; }
-  100% { transform: translateY(-100vh) translateX(40px); opacity: 0; }
-}
-
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background:
-    radial-gradient(1px 1px at 10% 20%, rgba(0,240,255,0.6), transparent),
-    radial-gradient(1px 1px at 25% 45%, rgba(0,240,255,0.5), transparent),
-    radial-gradient(2px 2px at 40% 10%, rgba(216,70,239,0.5), transparent),
-    radial-gradient(1px 1px at 55% 60%, rgba(0,240,255,0.4), transparent),
-    radial-gradient(2px 2px at 70% 30%, rgba(123,47,255,0.5), transparent),
-    radial-gradient(1px 1px at 85% 50%, rgba(0,240,255,0.5), transparent),
-    radial-gradient(1px 1px at 15% 70%, rgba(216,70,239,0.4), transparent),
-    radial-gradient(2px 2px at 60% 80%, rgba(0,240,255,0.3), transparent),
-    radial-gradient(1px 1px at 90% 15%, rgba(123,47,255,0.5), transparent),
-    radial-gradient(1px 1px at 35% 85%, rgba(0,240,255,0.4), transparent);
-  background-size: 200px 200px;
-  animation: particleDrift 20s linear infinite;
-}
-
-/* ---- 扫描线效果 ---- */
-.scanlines {
-  position: fixed;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(0, 0, 0, 0.03) 2px,
-    rgba(0, 0, 0, 0.03) 4px
-  );
-}
-
-/* ---- 根容器层 ---- */
+/* ---- 根容器 ---- */
 .sci-fi-root {
   position: relative;
   z-index: 2;
 }
 
-/* ---- 霓虹文字 ---- */
-.neon-text {
-  text-shadow:
-    0 0 10px var(--cyan-dim),
-    0 0 40px var(--cyan-dim),
-    0 0 80px rgba(0, 240, 255, 0.2);
-}
-
-.neon-text-magenta {
-  text-shadow:
-    0 0 10px rgba(216, 70, 239, 0.25),
-    0 0 40px rgba(216, 70, 239, 0.2),
-    0 0 80px rgba(216, 70, 239, 0.15);
-}
-
+/* ---- 渐变文字 ---- */
 .gradient-text {
-  background: linear-gradient(135deg, var(--cyan) 0%, var(--magenta) 50%, var(--purple) 100%);
+  background: linear-gradient(135deg, #e4e4e7 0%, #2dd4bf 50%, #5eead4 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* ---- 科幻卡片 ---- */
+/* ---- 卡片 ---- */
 .sci-card {
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
-  border-radius: 16px;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  border-radius: var(--radius-md);
   position: relative;
   overflow: hidden;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.sci-card::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--cyan), transparent);
-  opacity: 0;
-  transition: opacity 0.4s;
+  transition: all 0.35s cubic-bezier(0.25, 0.4, 0.25, 1);
 }
 
 .sci-card:hover {
-  border-color: var(--border-glow);
-  transform: translateY(-4px);
-  box-shadow:
-    0 0 30px rgba(0, 240, 255, 0.08),
-    0 20px 50px rgba(0, 0, 0, 0.5);
+  background: var(--bg-card-hover);
+  border-color: var(--border-strong);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
-.sci-card:hover::before {
-  opacity: 0.8;
-}
-
-/* 卡片角落装饰 */
-.sci-card::after {
+/* 顶部细线 */
+.sci-card::before {
   content: "";
   position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 40px;
-  height: 40px;
-  border-right: 1px solid var(--border-subtle);
-  border-bottom: 1px solid var(--border-subtle);
+  top: 0; left: 12px; right: 12px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-strong), transparent);
   opacity: 0;
   transition: opacity 0.4s;
 }
 
-.sci-card:hover::after {
+.sci-card:hover::before {
   opacity: 1;
 }
 
-/* ---- 发光边框按钮 ---- */
+/* ---- 按钮 ---- */
 .sci-btn-primary {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 12px 32px;
-  background: rgba(0, 240, 255, 0.1);
-  border: 1px solid var(--border-glow);
+  padding: 12px 28px;
+  background: rgba(45, 212, 191, 0.1);
+  border: 1px solid rgba(45, 212, 191, 0.25);
   border-radius: 9999px;
-  color: var(--cyan);
+  color: var(--accent);
   font-weight: 600;
-  font-size: 0.95rem;
-  letter-spacing: 0.02em;
+  font-size: 0.9rem;
+  letter-spacing: 0.01em;
   cursor: pointer;
   transition: all 0.3s;
-  position: relative;
-  overflow: hidden;
   text-decoration: none;
 }
 
-.sci-btn-primary::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, var(--cyan), var(--purple));
-  opacity: 0;
-  transition: opacity 0.3s;
-  border-radius: 9999px;
-}
-
 .sci-btn-primary:hover {
-  color: #000;
-  box-shadow: 0 0 40px rgba(0, 240, 255, 0.3);
-}
-
-.sci-btn-primary:hover::before {
-  opacity: 1;
-}
-
-.sci-btn-primary span {
-  position: relative;
-  z-index: 1;
+  background: rgba(45, 212, 191, 0.18);
+  border-color: var(--accent);
+  box-shadow: 0 0 24px rgba(45, 212, 191, 0.12);
 }
 
 .sci-btn-ghost {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 12px 32px;
+  padding: 12px 28px;
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid var(--border-strong);
   border-radius: 9999px;
   color: var(--text-secondary);
   font-weight: 500;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.3s;
   text-decoration: none;
 }
 
 .sci-btn-ghost:hover {
-  border-color: var(--border-glow);
-  color: var(--cyan);
-  box-shadow: 0 0 20px rgba(0, 240, 255, 0.08);
+  border-color: rgba(255,255,255,0.2);
+  color: var(--text-primary);
+  background: rgba(255,255,255,0.03);
 }
 
 /* ---- 区块标题 ---- */
 .sci-section-label {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
-  font-family: 'SF Mono', 'Fira Code', monospace;
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.2em;
+  gap: 14px;
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.25em;
   text-transform: uppercase;
-  color: var(--cyan);
-  margin-bottom: 12px;
+  color: var(--accent);
+  margin-bottom: 8px;
 }
 
 .sci-section-label::before,
 .sci-section-label::after {
   content: "";
   display: block;
-  width: 24px;
+  width: 28px;
   height: 1px;
-  background: var(--border-glow);
+  background: rgba(45, 212, 191, 0.3);
 }
 
 .sci-section-title {
-  font-size: 2.5rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  margin-bottom: 8px;
+  font-size: 2.25rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+
+.sci-divider {
+  width: 48px;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 1px;
+  margin: 12px auto 0;
+  opacity: 0.6;
 }
 
 /* ---- 标签芯片 ---- */
 .sci-chip {
   display: inline-flex;
   align-items: center;
-  padding: 6px 14px;
-  background: rgba(0, 240, 255, 0.06);
+  padding: 5px 12px;
+  background: rgba(255, 255, 255, 0.03);
   border: 1px solid var(--border-subtle);
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   color: var(--text-secondary);
-  font-size: 0.85rem;
-  font-weight: 500;
-  transition: all 0.3s;
+  font-size: 0.8rem;
+  font-weight: 450;
+  transition: all 0.25s;
   cursor: default;
 }
 
 .sci-chip:hover {
-  background: rgba(0, 240, 255, 0.12);
-  border-color: var(--border-glow);
-  color: var(--cyan);
-  box-shadow: 0 0 16px rgba(0, 240, 255, 0.1);
-  transform: translateY(-2px);
-}
-
-/* ---- 发光圆点 ---- */
-.pulse-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--cyan);
-  box-shadow: 0 0 8px var(--cyan), 0 0 20px var(--cyan);
-  animation: dotPulse 2s ease-in-out infinite;
-}
-
-.pulse-dot-green {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--green);
-  box-shadow: 0 0 8px var(--green), 0 0 20px var(--green);
-  animation: dotPulse 2s ease-in-out infinite;
-}
-
-@keyframes dotPulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(1.3); }
-}
-
-/* ---- 发光下划线 ---- */
-.sci-divider {
-  width: 64px;
-  height: 3px;
-  background: linear-gradient(90deg, var(--cyan), var(--purple));
-  border-radius: 2px;
-  box-shadow: 0 0 12px rgba(0, 240, 255, 0.3);
-  margin: 0 auto;
+  background: rgba(45, 212, 191, 0.06);
+  border-color: rgba(45, 212, 191, 0.2);
+  color: var(--text-primary);
 }
 
 /* ---- 导航栏 ---- */
 .sci-nav {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  top: 0; left: 0; right: 0;
   z-index: 50;
-  background: rgba(10, 10, 15, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: rgba(8, 8, 12, 0.88);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   border-bottom: 1px solid var(--border-subtle);
 }
 
 .sci-nav-link {
   color: var(--text-secondary);
   text-decoration: none;
-  font-size: 0.875rem;
-  font-weight: 500;
-  letter-spacing: 0.04em;
+  font-size: 0.85rem;
+  font-weight: 450;
+  letter-spacing: 0.02em;
   position: relative;
   padding: 4px 0;
-  transition: color 0.3s;
+  transition: color 0.25s;
 }
 
 .sci-nav-link::after {
   content: "";
   position: absolute;
-  bottom: -2px;
-  left: 0;
-  right: 0;
+  bottom: 0; left: 0; right: 0;
   height: 1.5px;
-  background: var(--cyan);
+  background: var(--accent);
   transform: scaleX(0);
-  transition: transform 0.3s;
+  transition: transform 0.3s cubic-bezier(0.25, 0.4, 0.25, 1);
+  border-radius: 1px;
 }
 
 .sci-nav-link:hover {
-  color: var(--cyan);
+  color: var(--text-primary);
 }
 
 .sci-nav-link:hover::after {
   transform: scaleX(1);
 }
 
-/* ---- Hero 全息效果 ---- */
+/* ---- Hero ---- */
 .hero-glow {
   position: absolute;
-  width: 600px;
-  height: 600px;
+  width: 700px;
+  height: 700px;
   border-radius: 50%;
-  filter: blur(120px);
-  opacity: 0.15;
+  filter: blur(160px);
+  opacity: 0.08;
   pointer-events: none;
-  animation: heroGlowFloat 8s ease-in-out infinite;
 }
 
-@keyframes heroGlowFloat {
+@keyframes heroGlowDrift {
   0%, 100% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(30px, -20px) scale(1.05); }
-  66% { transform: translate(-20px, 10px) scale(0.95); }
+  33% { transform: translate(40px, -30px) scale(1.03); }
+  66% { transform: translate(-30px, 20px) scale(0.97); }
 }
 
 /* ---- 统计数字 ---- */
 .sci-stat-value {
-  font-size: 2.5rem;
-  font-weight: 800;
-  font-family: 'SF Mono', 'Fira Code', monospace;
-  background: linear-gradient(135deg, var(--cyan), var(--magenta));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-size: 2.25rem;
+  font-weight: 700;
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+}
+
+.sci-stat-value .unit {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  margin-left: 2px;
 }
 
 /* ---- 时间线 ---- */
@@ -423,22 +299,53 @@ body::after {
   content: "";
   position: absolute;
   left: 28px;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background: linear-gradient(to bottom, var(--cyan), var(--magenta), var(--purple));
-  box-shadow: 0 0 12px rgba(0, 240, 255, 0.2);
+  top: 0; bottom: 0;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--accent), rgba(45, 212, 191, 0.1), transparent);
 }
 
-/* ---- 技能卡片悬停霓虹 ---- */
+/* ---- 指标小卡片 ---- */
+.metric-badge {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+  background: rgba(45, 212, 191, 0.04);
+  border: 1px solid rgba(45, 212, 191, 0.08);
+}
+
+.metric-value {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.metric-label {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+}
+
+/* ---- 技能卡片 ---- */
 .skill-cat-card {
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.35s cubic-bezier(0.25, 0.4, 0.25, 1);
 }
 
 .skill-cat-card:hover {
-  box-shadow:
-    0 0 30px rgba(0, 240, 255, 0.08),
-    inset 0 0 30px rgba(0, 240, 255, 0.02);
+  border-color: rgba(45, 212, 191, 0.15);
+}
+
+/* ---- 联系卡片 ---- */
+.contact-card {
+  transition: all 0.35s cubic-bezier(0.25, 0.4, 0.25, 1);
+}
+
+.contact-card:hover {
+  border-color: var(--border-strong);
+  background: var(--bg-card-hover);
+  transform: translateY(-2px);
 }
 
 /* ---- 页脚 ---- */
@@ -447,69 +354,36 @@ body::after {
   border-top: 1px solid var(--border-subtle);
 }
 
-/* ---- 动画关键帧 ---- */
+/* ---- 动画 ---- */
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(40px); }
+  from { opacity: 0; transform: translateY(32px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes glitchIn {
-  0% { opacity: 0; clip-path: inset(0 100% 0 0); }
-  50% { clip-path: inset(20% 0 60% 0); }
-  100% { opacity: 1; clip-path: inset(0 0 0 0); }
-}
-
 .animate-fade-in {
-  animation: fadeInUp 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: fadeInUp 0.6s cubic-bezier(0.25, 0.4, 0.25, 1) forwards;
+  opacity: 0;
 }
 
-.animate-delay-1 { animation-delay: 0.1s; opacity: 0; }
-.animate-delay-2 { animation-delay: 0.2s; opacity: 0; }
-.animate-delay-3 { animation-delay: 0.3s; opacity: 0; }
-.animate-delay-4 { animation-delay: 0.4s; opacity: 0; }
+.animate-delay-1 { animation-delay: 0.08s; }
+.animate-delay-2 { animation-delay: 0.16s; }
+.animate-delay-3 { animation-delay: 0.24s; }
+.animate-delay-4 { animation-delay: 0.32s; }
 
-/* ---- 终端光标效果 ---- */
-@keyframes terminalBlink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
+/* ---- 迷你脉冲（仅用于在线状态） ---- */
+@keyframes subtlePulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
 }
 
-.terminal-cursor {
-  display: inline-block;
-  width: 3px;
-  height: 1.1em;
-  background: var(--cyan);
-  margin-left: 4px;
-  vertical-align: text-bottom;
-  animation: terminalBlink 1s step-end infinite;
-  box-shadow: 0 0 8px var(--cyan);
+.subtle-pulse {
+  animation: subtlePulse 3s ease-in-out infinite;
 }
 
-/* ---- Hex 装饰 ---- */
-.hex-decoration {
-  position: absolute;
-  width: 120px;
-  height: 120px;
-  border: 1px solid rgba(0, 240, 255, 0.06);
-  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-  pointer-events: none;
-}
-
-/* ---- Contact hover ---- */
-.contact-card {
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.contact-card:hover {
-  border-color: var(--border-glow);
-  box-shadow: 0 0 30px rgba(0, 240, 255, 0.1);
-  transform: translateY(-3px);
-}
-
-/* ---- 响应式调整 ---- */
+/* ---- 响应式 ---- */
 @media (max-width: 768px) {
-  .sci-section-title { font-size: 1.8rem; }
-  .sci-stat-value { font-size: 1.8rem; }
+  .sci-section-title { font-size: 1.75rem; }
+  .sci-stat-value { font-size: 1.75rem; }
 
   .sci-timeline::before {
     left: 16px;
