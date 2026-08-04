@@ -603,6 +603,104 @@ body::before {
   50%      { transform: scaleY(1); }
 }
 
+/* ---- 点击进入开场层（桌面端） ---- */
+.entrance {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(1100px 700px at 50% 15%, rgba(34, 211, 238, 0.1), transparent 60%),
+    radial-gradient(900px 650px at 85% 85%, rgba(167, 139, 250, 0.1), transparent 60%),
+    radial-gradient(700px 500px at 10% 90%, rgba(244, 114, 182, 0.06), transparent 60%),
+    rgba(7, 8, 13, 0.93);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  animation: entranceFade 0.7s ease-out;
+}
+
+.entrance-inner {
+  text-align: center;
+  padding: 40px 32px;
+  animation: entranceRise 0.8s cubic-bezier(0.25, 0.5, 0.25, 1);
+}
+
+.entrance-label {
+  font-size: 12px;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+
+.entrance-title {
+  font-size: clamp(3rem, 9vw, 5.5rem);
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  line-height: 1.1;
+  margin-bottom: 18px;
+}
+
+.entrance-sub {
+  font-size: 15px;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+  margin-bottom: 44px;
+}
+
+.entrance-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 46px;
+  border-radius: 9999px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  color: var(--cyan);
+  background: linear-gradient(135deg, rgba(34, 211, 238, 0.14), rgba(167, 139, 250, 0.14));
+  border: 1px solid rgba(34, 211, 238, 0.45);
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: all 0.3s ease;
+  animation: entrancePulse 2.4s ease-in-out infinite;
+}
+
+.entrance-btn:hover,
+.entrance-btn:focus-visible {
+  background: linear-gradient(135deg, rgba(34, 211, 238, 0.3), rgba(167, 139, 250, 0.3));
+  border-color: rgba(34, 211, 238, 0.9);
+  color: #fff;
+  box-shadow: 0 0 32px rgba(34, 211, 238, 0.45);
+  transform: translateY(-2px);
+  outline: none;
+}
+
+.entrance-note {
+  margin-top: 26px;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
+@keyframes entranceFade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes entranceRise {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes entrancePulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(34, 211, 238, 0.35); }
+  50%      { box-shadow: 0 0 0 14px rgba(34, 211, 238, 0); }
+}
+
 /* ---- 验证码弹窗 ---- */
 .modal-backdrop {
   position: fixed;
@@ -718,7 +816,10 @@ body::before {
   .typing-cursor,
   .eq i,
   .music-toggle.music-pending,
-  .music-hint {
+  .music-hint,
+  .entrance,
+  .entrance-inner,
+  .entrance-btn {
     animation: none;
   }
 

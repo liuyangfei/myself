@@ -642,7 +642,13 @@ class SciFiAudio {
 function MusicToggle() {
   // 三态：stopped 已关闭 / pending 待播放（等待首次手势）/ playing 正在播放
   const [status, setStatus] = useState('pending')
+  // 桌面端（鼠标设备）显示「点击进入」开场层；触摸设备进页面即播放，无需开场层
+  const [entering, setEntering] = useState(
+    () => typeof window === 'undefined'
+      || !(window.matchMedia && window.matchMedia('(pointer: coarse)').matches)
+  )
   const engineRef = useRef(null)
+  const enterBtnRef = useRef(null)
 
   // 在用户手势内同步创建 AudioContext 并启动。
   // iOS Safari 强制要求音频必须在用户手势内创建/恢复，
@@ -691,6 +697,13 @@ function MusicToggle() {
     }
   }, [startMusic])
 
+  // 聚焦「进入」按钮，方便键盘操作
+  useEffect(() => {
+    if (entering) enterBtnRef.current?.focus()
+  }, [entering])
+
+  const dismiss = () => setEntering(false)
+
   const toggle = () => {
     if (status === 'playing') {
       engineRef.current?.stop()
@@ -707,14 +720,33 @@ function MusicToggle() {
 
   return (
     <>
-      {status === 'pending' && (
+      {entering && createPortal(
+        <div className="entrance" role="dialog" aria-modal="true" aria-label="进入站点" onClick={dismiss}>
+          <div className="entrance-inner">
+            <div className="entrance-label">PERSONAL PORTFOLIO · 个人主页</div>
+            <h1 className="entrance-title gradient-text">刘洋飞</h1>
+            <div className="entrance-sub">以代码探索未来 · AI 全栈工程师</div>
+            <button
+              ref={enterBtnRef}
+              type="button"
+              className="entrance-btn"
+              onClick={dismiss}
+            >
+              进入 · ENTER
+            </button>
+            <div className="entrance-note">🔊 进入后自动开启氛围音乐 · 可在左下角随时关闭</div>
+          </div>
+        </div>,
+        document.body
+      )}
+      {status === 'pending' && !entering && (
         <div className="music-hint" role="status">
           🔊 点击任意位置开启音乐
         </div>
       )}
       <button
         onClick={toggle}
-        className={`music-toggle ${status === 'playing' ? 'music-playing' : ''} ${status === 'pending' ? 'music-pending' : ''}`}
+        className={`music-toggle ${status === 'playing' ? 'music-playing' : ''} ${status === 'pending' && !entering ? 'music-pending' : ''}`}
         aria-label={label}
         title={label}
       >
