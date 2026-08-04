@@ -14,7 +14,7 @@ const NAV_ITEMS = [
 const SKILL_CATEGORIES = [
   {
     title: '后端开发',
-    skills: ['Java', 'SpringBoot', 'SpringCloud', 'gRPC', 'Netty', 'DDD 领域驱动设计', '微服务治理'],
+    skills: ['Java', 'SpringBoot', 'SpringCloud', 'gRPC', 'Netty', 'DDD', '微服务治理'],
   },
   {
     title: '前端开发',
@@ -22,7 +22,7 @@ const SKILL_CATEGORIES = [
   },
   {
     title: '数据库 & 缓存',
-    skills: ['MySQL 分库分表/索引优化', 'Redis 缓存策略/持久化', 'ShardingSphere', 'MongoDB'],
+    skills: ['MySQL 分库分表', 'Redis', 'ShardingSphere', 'MongoDB'],
   },
   {
     title: '消息中间件',
@@ -30,11 +30,11 @@ const SKILL_CATEGORIES = [
   },
   {
     title: 'DevOps & 云平台',
-    skills: ['K8s', 'Docker', 'Nginx', 'Linux', 'Jenkins CI/CD', 'Git', 'Maven', 'Nacos', 'XxlJob', '阿里云/华为云/腾讯云'],
+    skills: ['K8s', 'Docker', 'Nginx', 'Linux', 'Jenkins', 'Git', 'Maven', 'Nacos', 'XxlJob', '云厂商'],
   },
   {
     title: '金融业务',
-    skills: ['人行征信上报与查询', '金融监管报送', '贷中风控', '信贷保障', '保险对接（众安）', '海外征信（TransUnion）'],
+    skills: ['人行征信', '监管报送', '贷中风控', '信贷保障', '保险对接', '海外征信'],
   },
   {
     title: 'AI & 新技术',
@@ -45,10 +45,10 @@ const SKILL_CATEGORIES = [
 /* ========== 工作经历数据 ========== */
 const EXPERIENCES = [
   {
-    period: '2023.07 - 至今',
+    period: '2023.07 — 至今',
     role: 'Java 开发工程师',
     company: '深圳市互联数智科技有限公司',
-    subtitle: '金融科技 SaaS 服务商 · 核心开发兼架构设计',
+    subtitle: '金融科技 SaaS · 核心开发兼架构设计',
     highlights: [
       '独立负责征信业务系统与融担 SaaS 监管上报平台两大核心平台的全栈建设，覆盖后端、前端（React、Vue）及运维部署',
       '搭建基于 SpringBoot + gRPC 的微服务架构，结合 Redis 缓存与 MySQL 分库分表，引入 ShardingSphere 按日期分表及 MongoDB 存储非结构化附件',
@@ -57,16 +57,16 @@ const EXPERIENCES = [
     ],
     metrics: [
       { value: '700万', label: '成本节省' },
-      { value: '100万+', label: '征信上报笔数' },
-      { value: '300万+', label: '在线查询笔数' },
-      { value: '100%', label: '监管合规率' },
+      { value: '100万+', label: '征信上报' },
+      { value: '300万+', label: '在线查询' },
+      { value: '100%', label: '合规率' },
     ],
   },
   {
-    period: '2021.01 - 2023.07',
+    period: '2021.01 — 2023.07',
     role: 'Java 开发工程师',
     company: '深圳市富融信息科技有限公司',
-    subtitle: '香港富融银行（Fusion Bank）大陆技术研发 · 技术负责人',
+    subtitle: '香港富融银行（Fusion Bank）· 技术负责人',
     highlights: [
       '主导贷中触达平台从 C++ 至 Java 的完整 DDD 重构，采用限界上下文将业务划分为"通知域""策略域""事件域"，通过领域事件解耦各业务模块',
       '设计并实施"双写+灰度"平滑迁移策略，新旧系统并行运行、逐步切换流量，确保迁移过程零故障',
@@ -74,14 +74,14 @@ const EXPERIENCES = [
       '使用多线程等策略对重构后系统进行性能优化，并发吞吐量提升至原来的 3 倍，响应时间降低 50%',
     ],
     metrics: [
-      { value: '3x', label: '并发吞吐提升' },
-      { value: '-50%', label: '响应时间降低' },
-      { value: '10亿+', label: '信贷规模（港币）' },
-      { value: '0', label: '迁移重大故障' },
+      { value: '3x', label: '并发吞吐' },
+      { value: '-50%', label: '响应时间' },
+      { value: '10亿+', label: '信贷规模' },
+      { value: '0', label: '重大故障' },
     ],
   },
   {
-    period: '2019.07 - 2020.12',
+    period: '2019.07 — 2020.12',
     role: 'Java 开发工程师',
     company: '深圳市小赢科技有限公司',
     subtitle: '小赢科技（NYSE: XYF）· 后台核心开发',
@@ -92,29 +92,29 @@ const EXPERIENCES = [
       '对接众安保险系统，保障保险对接与还款跟踪的高可靠性',
     ],
     metrics: [
-      { value: '100%', label: 'C++→Java 迁移' },
-      { value: '99.9%', label: '保险对接成功率' },
-      { value: '10+', label: '跨系统步骤编排' },
+      { value: '100%', label: 'C++→Java' },
+      { value: '99.9%', label: '对接成功率' },
+      { value: '10+', label: '跨系统步骤' },
     ],
   },
   {
-    period: '2017.02 - 2019.07',
+    period: '2017.02 — 2019.07',
     role: 'Java 开发工程师',
     company: '珠海市小源科技有限公司',
-    subtitle: '信析宝 SDK 核心接口组 · 骨干开发 · 获"性能优化奖"',
+    subtitle: '信析宝 SDK 核心接口组 · 获"性能优化奖"',
     highlights: [
       '基于 SpringBoot + Netty 构建非阻塞 NIO I/O 模型，替代传统 Tomcat BIO，并发连接数提升 5 倍',
       '构建 Redis + 本地多级缓存架构，结合布隆过滤器 + 互斥锁防御缓存击穿，保障热点查询稳定性',
       '主导全链路压测与 JVM 调优（GC 停顿优化），荣获公司年度"性能优化奖"',
     ],
     metrics: [
-      { value: '15亿/日', label: '接口请求量' },
-      { value: '-40%', label: '响应时间降低' },
-      { value: '5x', label: '并发连接提升' },
+      { value: '15亿/日', label: '接口请求' },
+      { value: '-40%', label: '响应时间' },
+      { value: '5x', label: '并发连接' },
     ],
   },
   {
-    period: '2015.09 - 2016.10',
+    period: '2015.09 — 2016.10',
     role: 'Java 开发工程师',
     company: '云印技术有限公司',
     subtitle: '互联网印刷电商 · 后台开发',
@@ -124,7 +124,7 @@ const EXPERIENCES = [
     ],
   },
   {
-    period: '2014.03 - 2015.09',
+    period: '2014.03 — 2015.09',
     role: 'Java 开发工程师',
     company: '深圳市彩讯科技有限公司',
     subtitle: '中国移动 139 邮箱技术服务商 · 中间件研发',
@@ -140,7 +140,7 @@ const EXPERIENCES = [
 const PROJECTS = [
   {
     name: '征信业务系统',
-    period: '2023.07 - 至今',
+    period: '2023.07 — 至今',
     role: '总负责人',
     intro: '面向融担/小贷公司的统一征信前置平台，对接人行征信系统，累计承载 100 万+ 笔上报及 300 万+ 笔在线查询，数据规模达百亿级。',
     tech: ['SpringBoot', 'Docker', 'MySQL', 'Redis', 'React', 'Jenkins', 'Nginx', 'Nacos', 'XxlJob', '华为云/阿里云'],
@@ -153,7 +153,7 @@ const PROJECTS = [
   },
   {
     name: '融担业务数据管理 SaaS 及监管上报平台',
-    period: '2023.07 - 至今',
+    period: '2023.07 — 至今',
     role: '总负责人',
     intro: '面向融担公司的 SaaS 化监管上报平台，支撑向天津金融监管局报送百亿级担保数据，服务明东东华、华澎等多家头部融担公司。',
     tech: ['SpringBoot', 'gRPC', 'MySQL', 'Redis', 'React', 'Jenkins', 'Nginx', 'Nacos', 'XxlJob', '华为云'],
@@ -166,7 +166,7 @@ const PROJECTS = [
   },
   {
     name: '富融银行贷中触达系统重构',
-    period: '2021.01 - 2023.07',
+    period: '2021.01 — 2023.07',
     role: '技术负责人',
     intro: '香港富融银行贷中触达核心系统，原系统基于 C++ 老旧框架，重构至 Java 微服务架构，支撑超 10 亿港币信贷规模。',
     tech: ['SpringBoot', 'CMQ', 'gRPC', 'MySQL', 'Redis'],
@@ -179,7 +179,7 @@ const PROJECTS = [
   },
   {
     name: '信贷保障方平台',
-    period: '2019.07 - 2020.12',
+    period: '2019.07 — 2020.12',
     role: '技术负责人',
     intro: '小赢科技信贷业务全流程保障平台，对接众安保险，覆盖授信、投保、报案、追偿还款全流程。',
     tech: ['SpringBoot', 'CMQ', 'Service Mesh', 'MySQL', 'Scheduler', 'Saturn'],
@@ -192,7 +192,7 @@ const PROJECTS = [
   },
   {
     name: '信析宝 SDK 核心接口',
-    period: '2017.02 - 2019.07',
+    period: '2017.02 — 2019.07',
     role: '技术负责人',
     intro: '嵌入华为、小米、联想等手机系统的智能短信 SDK，日均请求量 15 亿次，国内规模最大的手机系统级智能短信服务之一。',
     tech: ['SpringBoot', 'Netty', 'Redis', 'MySQL', 'MongoDB'],
@@ -207,7 +207,7 @@ const PROJECTS = [
 
 /* ========== 统计数字 ========== */
 const STATS = [
-  { value: '12', unit: '年', label: 'Java 开发经验' },
+  { value: '12', unit: '年', label: 'JAVA 开发经验' },
   { value: '700', unit: '万', label: '成本节省' },
   { value: '99.99', unit: '%', label: '系统可用性' },
   { value: '3', unit: 'x', label: '并发吞吐提升' },
@@ -218,11 +218,10 @@ export default function App() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const active = useActiveSection()
 
-  // 全局滚动渐显
   useScrollReveal()
 
   return (
-    <div className="min-h-screen bg-[#08080c] text-[#e4e4e7]">
+    <div className="min-h-screen bg-[#06101f] text-[#e8f1ff]">
       <div className="sci-fi-root">
         <Navbar mobileOpen={mobileOpen} onToggle={() => setMobileOpen(!mobileOpen)} active={active} />
         <Hero />
@@ -245,7 +244,6 @@ function useScrollReveal() {
     const els = document.querySelectorAll('[data-reveal]')
     if (els.length === 0) return
 
-    // 尊重系统「减少动效」设置
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       els.forEach((el) => el.classList.add('reveal-visible'))
       return
@@ -298,7 +296,7 @@ function useActiveSection() {
 }
 
 /* ==================== 打字机效果 ==================== */
-function Typewriter({ text, speed = 90, startDelay = 300 }) {
+function Typewriter({ text, speed = 90, startDelay = 400 }) {
   const [count, setCount] = useState(0)
   const reduced = useRef(
     typeof window !== 'undefined' &&
@@ -350,7 +348,6 @@ function CountUp({ value, unit, duration = 1500 }) {
     const el = ref.current
     if (!el) return
 
-    // 系统减少动效时直接显示最终值
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       setDisplay(value)
       return
@@ -420,23 +417,24 @@ function Navbar({ mobileOpen, onToggle, active }) {
   return (
     <nav className="sci-nav">
       <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
-        <a href="#" className="flex items-center gap-2.5 group">
-          <span className="text-lg font-bold tracking-tight" style={{ color: 'var(--accent)' }}>
+        <a href="#top" className="flex items-baseline gap-2.5 group">
+          <span className="text-base font-bold tracking-[0.18em]" style={{ color: 'var(--accent)' }}>
             LYF
           </span>
-          <span className="hidden sm:inline text-[10px] tracking-widest font-mono"
-            style={{ color: 'var(--text-muted)', opacity: 0.6 }}>
+          <span className="hidden sm:inline font-mono text-[9px] tracking-[0.3em] uppercase"
+            style={{ color: 'var(--text-muted)' }}>
             LIU YANG FEI
           </span>
         </a>
 
-        <ul className="hidden md:flex gap-8 text-sm">
+        <ul className="hidden md:flex gap-7 text-sm">
           {NAV_ITEMS.map((item, i) => (
             <li key={item.href}>
               <a
                 href={item.href}
                 className={`sci-nav-link ${active === item.href.slice(1) ? 'sci-nav-link-active' : ''}`}
               >
+                <span className="nav-num">{String(i + 1).padStart(2, '0')}</span>
                 {item.label}
               </a>
             </li>
@@ -457,10 +455,11 @@ function Navbar({ mobileOpen, onToggle, active }) {
 
       {mobileOpen && (
         <div className="md:hidden px-6 pb-4"
-          style={{ background: 'rgba(8,8,12,0.95)', borderBottom: '1px solid var(--border-subtle)' }}>
+          style={{ background: 'rgba(6,16,31,0.95)', borderBottom: '1px solid var(--line)' }}>
           {NAV_ITEMS.map((item, i) => (
             <a key={item.href} href={item.href} className="block py-3 sci-nav-link"
               onClick={() => setMobileOpen(false)}>
+              <span className="nav-num">{String(i + 1).padStart(2, '0')}</span>
               {item.label}
             </a>
           ))}
@@ -473,51 +472,50 @@ function Navbar({ mobileOpen, onToggle, active }) {
 /* ==================== Hero ==================== */
 function Hero() {
   return (
-    <section className="relative min-h-screen flex items-center justify-center pt-14 overflow-hidden">
-      {/* 微光背景 */}
-      <div className="hero-glow" style={{
-        background: 'radial-gradient(circle, rgba(45,212,191,0.5) 0%, transparent 70%)',
-        top: '5%', left: '50%', transform: 'translate(-50%, 0)',
-        animation: 'heroGlowDrift 12s ease-in-out infinite',
-      }} />
-      <div className="hero-glow" style={{
-        background: 'radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 60%)',
-        top: '50%', left: '20%', animation: 'heroGlowDrift 12s ease-in-out 4s infinite',
-      }} />
+    <section id="top" className="relative min-h-screen flex items-center justify-center pt-14 overflow-hidden">
+      {/* 图纸框 */}
+      <div className="hero-frame absolute inset-x-6 md:inset-x-14 top-20 bottom-16 pointer-events-none opacity-60">
+        <div className="hero-corner tl" />
+        <div className="hero-corner tr" />
+        <div className="hero-corner bl" />
+        <div className="hero-corner br" />
+      </div>
 
-      <div className="relative z-10 max-w-4xl mx-auto px-6 py-20 text-center">
+      <div className="relative z-10 max-w-4xl mx-auto px-6 py-24 text-center">
+        {/* 图号 */}
+        <div className="hero-meta mb-6 animate-fade-in">
+          DWG NO. LYF-001 <span className="mx-2 opacity-40">//</span> REV A
+        </div>
+
         {/* 名字 */}
-        <h1 className="animate-fade-in text-5xl md:text-7xl font-bold tracking-tight mb-6 leading-tight">
-          <span style={{ color: 'var(--text-primary)' }}>刘洋飞</span>
+        <h1 className="animate-fade-in animate-delay-1 text-6xl md:text-8xl font-bold tracking-wide leading-tight mb-5">
+          <span className="gradient-text">刘洋飞</span>
         </h1>
 
-        {/* 副标题 */}
-        <p className="animate-fade-in animate-delay-1 text-lg md:text-xl mb-3"
+        {/* 英文标识 */}
+        <div className="hero-meta animate-fade-in animate-delay-2 mb-8"
+          style={{ color: 'var(--accent)', letterSpacing: '0.4em', fontSize: '0.8rem' }}>
+          LIU YANG FEI
+        </div>
+
+        {/* 角色行（打字机） */}
+        <p className="animate-fade-in animate-delay-2 text-lg md:text-xl mb-3 font-mono"
           style={{ color: 'var(--text-secondary)', minHeight: '1.8em' }}>
-          <Typewriter text="Java 后端开发工程师" />
+          <span style={{ color: 'var(--text-muted)' }}>&gt;_ </span>
+          <Typewriter text="Java 后端开发工程师 · 12 年经验" />
         </p>
-        <p className="animate-fade-in animate-delay-2 text-sm md:text-base mb-12"
-          style={{ color: 'var(--text-muted)' }}>
-          12 年经验 · 深圳 · DDD · 金融科技 · 高并发 · AI Coding
-        </p>
+
+        {/* 技术标签行 */}
+        <div className="animate-fade-in animate-delay-3 flex flex-wrap justify-center gap-2 mb-12">
+          {['DDD', 'FIN-TECH', 'HIGH-CONCURRENCY', 'AI CODING', 'SHENZHEN'].map((t) => (
+            <span key={t} className="hero-tag">{t}</span>
+          ))}
+        </div>
 
         {/* CTA */}
         <div className="animate-fade-in animate-delay-3 flex flex-wrap justify-center gap-4">
-          <a href="#contact" className="sci-btn-primary">
-            联系我
-          </a>
-          <a href="#experience" className="sci-btn-ghost">
-            查看经历
-          </a>
-        </div>
-
-        {/* 向下 */}
-        <div className="animate-fade-in animate-delay-4 mt-20">
-          <a href="#about" className="inline-block" style={{ color: 'var(--text-muted)' }}>
-            <svg className="w-4 h-4 mx-auto subtle-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-            </svg>
-          </a>
+          <a href="#contact" className="sci-btn-primary">联系我 <span aria-hidden>▸</span></a>
+          <a href="#experience" className="sci-btn-ghost">查看经历 <span aria-hidden>→</span></a>
         </div>
       </div>
     </section>
@@ -529,21 +527,28 @@ function About({ stats }) {
   return (
     <section id="about" className="relative py-20 md:py-28">
       <div className="max-w-6xl mx-auto px-6 relative z-10">
-        <SectionTitle subtitle="ABOUT" title="自我评价" />
+        <SectionTitle index="01" subtitle="ABOUT" title="自我评价" />
 
-        <div className="grid md:grid-cols-2 gap-10 items-start">
+        <div className="grid md:grid-cols-2 gap-8 items-start">
           {/* 左侧文字 */}
-          <div className="sci-card p-8 md:p-10" data-reveal>
-            <p className="text-[#a1a1aa] text-base leading-relaxed mb-5">
-              <strong style={{ color: 'var(--text-primary)' }}>12 年</strong> Java 后端开发经验，具备
+          <div className="sci-card p-7 md:p-9" data-reveal>
+            <div className="flex items-center gap-3 mb-5">
+              <span className="font-mono text-[10px] tracking-[0.25em] uppercase"
+                style={{ color: 'var(--text-muted)' }}>
+                SPEC-01 // PROFILE
+              </span>
+              <span className="flex-1 h-px" style={{ background: 'var(--line)' }} />
+            </div>
+            <p className="text-[#a9c3de] text-base leading-relaxed mb-5">
+              <strong style={{ color: 'var(--accent-soft)' }}>12 年</strong> Java 后端开发经验，具备
               技术架构设计、团队核心开发与跨系统项目管理等综合能力。
             </p>
-            <p className="text-[#a1a1aa] text-base leading-relaxed mb-5">
+            <p className="text-[#a9c3de] text-base leading-relaxed mb-5">
               擅长将 <strong style={{ color: 'var(--text-primary)' }}>DDD 设计理念</strong> 落地于
               复杂金融业务场景，主导多次 C++ 至 Java 系统重构，
               善于利用 <strong style={{ color: 'var(--accent)' }}>AI 工具（AI Coding）</strong> 赋能团队效能提升。
             </p>
-            <p className="text-[#a1a1aa] text-base leading-relaxed">
+            <p className="text-[#a9c3de] text-base leading-relaxed">
               持有公司 <strong style={{ color: 'var(--text-primary)' }}>"性能优化奖"</strong> 与
               <strong style={{ color: 'var(--text-primary)' }}>"文化先锋"</strong> 荣誉。
             </p>
@@ -552,12 +557,13 @@ function About({ stats }) {
           {/* 右侧统计 */}
           <div className="grid grid-cols-2 gap-3">
             {stats.map((stat, i) => (
-              <div key={stat.label} className="sci-card p-5 text-center group"
+              <div key={stat.label} className="sci-card p-6 text-center"
                 data-reveal style={{ '--reveal-delay': `${i * 100}ms` }}>
                 <div className="sci-stat-value">
                   <CountUp value={stat.value} unit={stat.unit} />
                 </div>
-                <div className="text-xs mt-2 tracking-wide"
+                <div className="mt-3 h-px w-10 mx-auto" style={{ background: 'var(--line-strong)' }} />
+                <div className="text-[10px] mt-2.5 font-mono tracking-[0.2em]"
                   style={{ color: 'var(--text-muted)' }}>
                   {stat.label}
                 </div>
@@ -575,21 +581,20 @@ function Skills({ categories }) {
   return (
     <section id="skills" className="relative py-20 md:py-28" style={{ background: 'var(--bg-surface)' }}>
       <div className="max-w-6xl mx-auto px-6 relative z-10">
-        <SectionTitle subtitle="SKILLS" title="专业技能" />
+        <SectionTitle index="02" subtitle="SKILLS" title="专业技能" />
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           {categories.map((cat, i) => (
             <div key={cat.title} className="skill-cat-card sci-card p-5"
               data-reveal style={{ '--reveal-delay': `${(i % 3) * 100}ms` }}>
-              <h3 className="text-sm font-semibold mb-3.5 tracking-wide"
+              <h3 className="font-mono text-xs font-semibold tracking-[0.15em] mb-4 flex items-center gap-2"
                 style={{ color: 'var(--text-primary)' }}>
-                {cat.title}
+                <span style={{ color: 'var(--accent)' }}>▚</span>
+                {cat.title.toUpperCase()}
               </h3>
               <div className="flex flex-wrap gap-1.5">
                 {cat.skills.map((skill) => (
-                  <span key={skill} className="sci-chip">
-                    {skill}
-                  </span>
+                  <span key={skill} className="sci-chip">{skill}</span>
                 ))}
               </div>
             </div>
@@ -605,28 +610,17 @@ function Experience({ experiences }) {
   return (
     <section id="experience" className="relative py-20 md:py-28">
       <div className="max-w-3xl mx-auto px-6 relative z-10">
-        <SectionTitle subtitle="EXPERIENCE" title="工作经历" />
+        <SectionTitle index="03" subtitle="EXPERIENCE" title="工作经历" />
 
-        <div className="sci-timeline pl-14 md:pl-16">
+        <div className="sci-timeline pl-14">
           {experiences.map((exp, i) => (
-            <div key={i} className="relative mb-8 group" data-reveal
-              style={{ '--reveal-delay': '0ms' }}>
-              {/* 时间线节点 */}
-              <div style={{
-                position: 'absolute',
-                left: '-44px',
-                top: 14,
-                width: 8,
-                height: 8,
-                borderRadius: '50%',
-                background: i === 0 ? 'var(--accent)' : 'transparent',
-                border: i === 0 ? 'none' : '1.5px solid rgba(255,255,255,0.15)',
-                transition: 'all 0.3s',
-              }}
-                className="group-hover:scale-125" />
+            <div key={i} className="relative mb-9 group" data-reveal>
+              {/* 菱形节点 + 连接线 */}
+              <span className={`tl-node ${i === 0 ? 'tl-node-active' : ''}`} />
+              <span className="tl-connector" />
 
               {/* 时间 */}
-              <span className="inline-block text-xs font-medium tracking-wide mb-2.5 font-mono"
+              <span className="inline-block font-mono text-xs tracking-[0.15em] mb-2.5"
                 style={{ color: 'var(--accent)' }}>
                 {exp.period}
               </span>
@@ -640,7 +634,7 @@ function Experience({ experiences }) {
                   {exp.company}
                 </p>
                 {exp.subtitle && (
-                  <p className="text-xs mb-3" style={{ color: 'var(--text-muted)' }}>
+                  <p className="text-xs mb-3 font-mono tracking-wide" style={{ color: 'var(--text-muted)' }}>
                     {exp.subtitle}
                   </p>
                 )}
@@ -648,19 +642,16 @@ function Experience({ experiences }) {
                   {exp.highlights.map((h, j) => (
                     <li key={j} className="flex items-start gap-2.5 text-sm leading-relaxed"
                       style={{ color: 'var(--text-secondary)' }}>
-                      <span className="mt-1.5 flex-shrink-0" style={{
-                        width: 3, height: 3, borderRadius: '50%',
-                        background: 'var(--accent)', opacity: 0.6,
-                      }} />
+                      <span className="mt-1.5 flex-shrink-0 font-mono"
+                        style={{ color: 'var(--accent)', fontSize: '0.6rem' }}>◆</span>
                       <span>{h}</span>
                     </li>
                   ))}
                 </ul>
 
-                {/* 关键指标 */}
                 {exp.metrics && (
                   <div className="mt-4 pt-3.5 flex flex-wrap gap-2"
-                    style={{ borderTop: '1px solid var(--border-subtle)' }}>
+                    style={{ borderTop: '1px solid var(--line)' }}>
                     {exp.metrics.map((m, k) => (
                       <div key={k} className="metric-badge">
                         <span className="metric-value">{m.value}</span>
@@ -678,12 +669,12 @@ function Experience({ experiences }) {
   )
 }
 
-/* ==================== 项目经验 ==================== */
+/* ==================== 项目经历 ==================== */
 function Projects({ projects }) {
   return (
     <section id="projects" className="relative py-20 md:py-28" style={{ background: 'var(--bg-surface)' }}>
       <div className="max-w-6xl mx-auto px-6 relative z-10">
-        <SectionTitle subtitle="PROJECTS" title="项目经历" />
+        <SectionTitle index="04" subtitle="PROJECTS" title="项目经历" />
 
         <div className="grid md:grid-cols-2 gap-4">
           {projects.map((proj, i) => (
@@ -695,51 +686,40 @@ function Projects({ projects }) {
                   {proj.name}
                 </h3>
                 {proj.role && (
-                  <span className="text-xs px-2 py-0.5 rounded-full flex-shrink-0 font-mono"
+                  <span className="font-mono text-[10px] px-2 py-1 tracking-[0.12em] flex-shrink-0"
                     style={{
-                      color: 'var(--accent)',
-                      background: 'rgba(45,212,191,0.06)',
-                      border: '1px solid rgba(45,212,191,0.12)',
+                      color: 'var(--accent-soft)',
+                      background: 'var(--accent-dim)',
+                      border: '1px solid var(--line-strong)',
                     }}>
                     {proj.role}
                   </span>
                 )}
               </div>
 
-              <p className="text-xs mb-3 font-mono" style={{ color: 'var(--accent)', opacity: 0.7 }}>
+              <p className="font-mono text-xs mb-3 tracking-[0.1em]"
+                style={{ color: 'var(--accent)', opacity: 0.75 }}>
                 {proj.period}
               </p>
 
-              {/* 简介 */}
               {proj.intro && (
                 <p className="text-sm mb-3.5 leading-relaxed" style={{ color: 'var(--text-muted)' }}>
                   {proj.intro}
                 </p>
               )}
 
-              {/* 技术标签 */}
               <div className="flex flex-wrap gap-1.5 mb-3.5">
                 {proj.tech.map((t) => (
-                  <span key={t} className="text-xs px-2 py-0.5 rounded font-mono"
-                    style={{
-                      background: 'rgba(255,255,255,0.02)',
-                      border: '1px solid var(--border-subtle)',
-                      color: 'var(--text-muted)',
-                    }}>
-                    {t}
-                  </span>
+                  <span key={t} className="sci-chip">{t}</span>
                 ))}
               </div>
 
-              {/* 成果 */}
               <ul className="space-y-2 flex-1">
                 {proj.achievements.map((a, j) => (
                   <li key={j} className="flex items-start gap-2.5 text-sm leading-relaxed"
                     style={{ color: 'var(--text-secondary)' }}>
-                    <span className="mt-1 flex-shrink-0" style={{ color: 'var(--accent)' }}>
-                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
+                    <span className="mt-1 flex-shrink-0 font-mono" style={{ color: 'var(--accent)', fontSize: '0.6rem' }}>
+                      ▸
                     </span>
                     <span>{a}</span>
                   </li>
@@ -757,17 +737,24 @@ function Projects({ projects }) {
 function Education() {
   return (
     <section className="relative py-20 md:py-28">
-      <div className="max-w-6xl mx-auto px-6 text-center relative z-10">
-        <SectionTitle subtitle="EDUCATION" title="教育背景" />
+      <div className="max-w-6xl mx-auto px-6 relative z-10">
+        <SectionTitle index="05" subtitle="EDUCATION" title="教育背景" />
 
-        <div className="inline-block sci-card p-8 md:p-10" data-reveal>
-          <h3 className="text-lg font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>
+        <div className="sci-card inline-block p-8 md:p-10 min-w-[320px] text-left" data-reveal>
+          <div className="flex items-center gap-3 mb-4">
+            <span className="font-mono text-[10px] tracking-[0.25em] uppercase"
+              style={{ color: 'var(--text-muted)' }}>
+              CERT-05 // DEGREE
+            </span>
+            <span className="flex-1 h-px" style={{ background: 'var(--line)' }} />
+          </div>
+          <h3 className="text-lg font-semibold mb-1.5" style={{ color: 'var(--text-primary)' }}>
             郑州轻工业大学
           </h3>
-          <p className="text-sm mb-1" style={{ color: 'var(--text-secondary)' }}>
+          <p className="text-sm mb-2" style={{ color: 'var(--text-secondary)' }}>
             计算机科学与技术 · 本科 · 统招
           </p>
-          <p className="text-sm font-mono tracking-wide" style={{ color: 'var(--accent)' }}>
+          <p className="font-mono text-sm tracking-[0.15em]" style={{ color: 'var(--accent)' }}>
             2010.09 — 2014.07
           </p>
         </div>
@@ -779,17 +766,13 @@ function Education() {
 /* ==================== 联系方式 ==================== */
 function Contact() {
   return (
-    <section id="contact" className="relative py-20 md:py-28 overflow-hidden">
-      <div className="hero-glow" style={{
-        background: 'radial-gradient(circle, rgba(45,212,191,0.25) 0%, transparent 60%)',
-        top: '40%', left: '50%', transform: 'translate(-50%, -50%)',
-      }} />
+    <section id="contact" className="relative py-20 md:py-28">
+      <div className="max-w-3xl mx-auto px-6 relative z-10">
+        <SectionTitle index="06" subtitle="CONTACT" title="联系我" />
 
-      <div className="max-w-3xl mx-auto px-6 text-center relative z-10">
-        <SectionTitle subtitle="CONTACT" title="联系我" />
-
-        <p className="mb-10 text-base" style={{ color: 'var(--text-secondary)' }}>
-          如果您对我的背景感兴趣，欢迎随时联系我
+        <p className="mb-10 text-base font-mono tracking-wide" style={{ color: 'var(--text-secondary)' }}>
+          <span style={{ color: 'var(--text-muted)' }}>&gt;_ </span>
+          如果您对我的背景感兴趣，欢迎随时联系
         </p>
 
         <div className="grid md:grid-cols-2 gap-4 mb-6">
@@ -815,11 +798,11 @@ function Contact() {
           </div>
         </div>
 
-        <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full"
-          data-reveal style={{ '--reveal-delay': '150ms' }}>
-          <span style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>📍</span>
-          <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-            期望地区：<strong style={{ color: 'var(--accent)' }}>深圳</strong>
+        <div className="inline-flex items-center gap-2 px-5 py-2.5 font-mono text-sm"
+          data-reveal style={{ '--reveal-delay': '150ms', border: '1px solid var(--line)' }}>
+          <span style={{ color: 'var(--text-muted)' }}>LOC:</span>
+          <span style={{ color: 'var(--text-secondary)' }}>
+            深圳 <span className="opacity-50">/ SHENZHEN</span>
           </span>
         </div>
       </div>
@@ -830,29 +813,24 @@ function Contact() {
 /* ==================== 验证码生成器 ==================== */
 function generateCaptcha() {
   const patterns = [
-    // a × b + c
     () => {
       const a = rand(3, 9), b = rand(4, 12), c = rand(5, 20)
       return { question: `${a} × ${b} + ${c} = ?`, answer: a * b + c }
     },
-    // a × b - c
     () => {
       const a = rand(4, 11), b = rand(3, 8)
       const max = a * b - 3
       const c = rand(5, Math.max(6, max))
       return { question: `${a} × ${b} − ${c} = ?`, answer: a * b - c }
     },
-    // (a + b) × c
     () => {
       const a = rand(2, 9), b = rand(3, 8), c = rand(2, 7)
       return { question: `(${a} + ${b}) × ${c} = ?`, answer: (a + b) * c }
     },
-    // a × b + c × d
     () => {
       const a = rand(2, 7), b = rand(3, 8), c = rand(2, 6), d = rand(3, 7)
       return { question: `${a} × ${b} + ${c} × ${d} = ?`, answer: a * b + c * d }
     },
-    // a² + b × c
     () => {
       const a = rand(3, 9), b = rand(3, 8), c = rand(2, 7)
       return { question: `${a}² + ${b} × ${c} = ?`, answer: a * a + b * c }
@@ -873,18 +851,15 @@ function RevealCard({ icon, label, masked, full, href, actionLabel }) {
   const [revealed, setRevealed] = useState(false)
   const [copied, setCopied] = useState(false)
 
-  // 验证弹窗状态
   const [showModal, setShowModal] = useState(false)
   const [captcha, setCaptcha] = useState(null)
   const [userAnswer, setUserAnswer] = useState('')
   const [captchaError, setCaptchaError] = useState(false)
   const [attempts, setAttempts] = useState(0)
 
-  // 锁定状态
   const [locked, setLocked] = useState(false)
   const [lockLeft, setLockLeft] = useState(0)
 
-  // 锁定倒计时
   useEffect(() => {
     if (!locked || lockLeft <= 0) return
     const t = setTimeout(() => {
@@ -900,7 +875,6 @@ function RevealCard({ icon, label, masked, full, href, actionLabel }) {
     return () => clearTimeout(t)
   }, [locked, lockLeft])
 
-  // 弹窗打开时：锁定 body 滚动 + Esc 关闭
   useEffect(() => {
     if (!showModal) return
     const onKey = (e) => {
@@ -935,7 +909,6 @@ function RevealCard({ icon, label, masked, full, href, actionLabel }) {
   const handleVerify = () => {
     const num = parseInt(userAnswer, 10)
 
-    // 空输入：抖动提示，但不消耗尝试次数
     if (Number.isNaN(num)) {
       setCaptchaError(true)
       return
@@ -948,7 +921,6 @@ function RevealCard({ icon, label, masked, full, href, actionLabel }) {
       return
     }
 
-    // 答错
     const next = attempts + 1
     setAttempts(next)
 
@@ -989,17 +961,17 @@ function RevealCard({ icon, label, masked, full, href, actionLabel }) {
       tabIndex={0}
       onKeyDown={(e) => { if (e.key === 'Enter') handleCardClick() }}
     >
-      <div className="w-10 h-10 rounded-lg flex items-center justify-center text-lg flex-shrink-0"
-        style={{ background: 'rgba(45,212,191,0.06)', border: '1px solid rgba(45,212,191,0.1)' }}>
+      <div className="w-10 h-10 rounded-[2px] flex items-center justify-center text-lg flex-shrink-0"
+        style={{ background: 'var(--accent-dim)', border: '1px solid var(--line-strong)' }}>
         {icon}
       </div>
 
       <div className="text-left flex-1 min-w-0">
-        <div className="text-[10px] font-mono tracking-widest" style={{ color: 'var(--text-muted)' }}>
+        <div className="font-mono text-[10px] tracking-[0.25em] uppercase" style={{ color: 'var(--text-muted)' }}>
           {label}
         </div>
-        <div className="text-sm font-medium font-mono transition-all duration-300"
-          style={{ color: revealed ? 'var(--accent)' : 'var(--text-muted)' }}>
+        <div className="font-mono text-sm font-medium transition-all duration-300"
+          style={{ color: revealed ? 'var(--accent-soft)' : 'var(--text-muted)' }}>
           {revealed ? full : masked}
         </div>
       </div>
@@ -1007,25 +979,25 @@ function RevealCard({ icon, label, masked, full, href, actionLabel }) {
       {/* 右侧状态区 */}
       <div className="flex items-center gap-1.5 flex-shrink-0">
         {!revealed && !locked && (
-          <span className="text-xs font-mono tracking-wider"
-            style={{ color: 'var(--text-muted)', opacity: 0.5 }}>
+          <span className="font-mono text-xs tracking-wider"
+            style={{ color: 'var(--text-muted)', opacity: 0.55 }}>
             点击查看
           </span>
         )}
 
         {locked && (
-          <span className="text-xs font-mono animate-shake" style={{ color: '#f87171' }}>
+          <span className="font-mono text-xs animate-shake" style={{ color: '#f87171' }}>
             🔒 {lockLeft}s
           </span>
         )}
 
         {revealed && (
           <>
-            <button onClick={handleCopy} className="w-7 h-7 flex items-center justify-center rounded-md transition-all"
+            <button onClick={handleCopy} className="w-7 h-7 flex items-center justify-center rounded-[2px] transition-all"
               style={{
-                background: copied ? 'rgba(45,212,191,0.12)' : 'rgba(255,255,255,0.03)',
-                border: copied ? '1px solid rgba(45,212,191,0.2)' : '1px solid var(--border-subtle)',
-                color: copied ? 'var(--accent)' : 'var(--text-muted)',
+                background: copied ? 'var(--accent-dim)' : 'rgba(255,255,255,0.02)',
+                border: copied ? '1px solid var(--accent)' : '1px solid var(--line)',
+                color: copied ? 'var(--accent-soft)' : 'var(--text-muted)',
               }} title="复制">
               {copied ? (
                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1038,8 +1010,8 @@ function RevealCard({ icon, label, masked, full, href, actionLabel }) {
               )}
             </button>
             <a href={href} onClick={(e) => e.stopPropagation()}
-              className="w-7 h-7 flex items-center justify-center rounded-md transition-all"
-              style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-subtle)', color: 'var(--text-muted)' }}
+              className="w-7 h-7 flex items-center justify-center rounded-[2px] transition-all"
+              style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid var(--line)', color: 'var(--text-muted)' }}
               title={actionLabel}>
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -1060,7 +1032,6 @@ function RevealCard({ icon, label, masked, full, href, actionLabel }) {
               aria-modal="true"
               aria-label="人机验证"
             >
-              {/* 关闭按钮 */}
               <button className="modal-close" onClick={closeModal} aria-label="关闭">
                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -1068,19 +1039,16 @@ function RevealCard({ icon, label, masked, full, href, actionLabel }) {
               </button>
 
               <div className="text-center">
-                {/* 标题 */}
-                <div className="text-[10px] font-mono tracking-widest mb-3"
+                <div className="font-mono text-[10px] tracking-[0.3em] mb-3 uppercase"
                   style={{ color: 'var(--text-muted)' }}>
-                  🤖 人机验证 · HUMAN VERIFICATION
+                  ⚙ Human Verification
                 </div>
 
-                {/* 算式 */}
-                <div className="text-xl font-bold font-mono tracking-wider mb-5"
+                <div className="font-mono text-xl font-bold tracking-wider mb-5"
                   style={{ color: 'var(--text-primary)' }}>
                   {captcha.question}
                 </div>
 
-                {/* 输入行 */}
                 <div className={`flex items-center justify-center gap-2 ${captchaError ? 'animate-shake' : ''}`}>
                   <input
                     type="text"
@@ -1090,40 +1058,39 @@ function RevealCard({ icon, label, masked, full, href, actionLabel }) {
                     onKeyDown={handleInputKey}
                     autoFocus
                     placeholder="输入答案"
-                    className="w-28 px-3 py-2.5 text-center text-sm font-mono rounded-lg outline-none"
+                    className="w-28 px-3 py-2.5 text-center font-mono text-sm outline-none"
                     style={{
-                      background: captchaError
-                        ? 'rgba(248,113,113,0.08)'
-                        : 'rgba(255,255,255,0.04)',
+                      background: captchaError ? 'rgba(248,113,113,0.08)' : 'rgba(255,255,255,0.03)',
                       border: captchaError
                         ? '1.5px solid rgba(248,113,113,0.5)'
-                        : '1px solid var(--border-strong)',
+                        : '1px solid var(--line-strong)',
                       color: 'var(--text-primary)',
+                      borderRadius: '2px',
                       transition: 'all 0.2s',
                       boxShadow: captchaError ? '0 0 12px rgba(248,113,113,0.15)' : 'none',
                     }}
                   />
                   <button
                     onClick={handleVerify}
-                    className="px-4 py-2.5 text-sm font-mono font-semibold rounded-lg transition-all"
+                    className="px-4 py-2.5 font-mono text-sm font-semibold transition-all"
                     style={{
-                      background: 'rgba(45,212,191,0.1)',
-                      border: '1px solid rgba(45,212,191,0.25)',
-                      color: 'var(--accent)',
+                      background: 'var(--accent-dim)',
+                      border: '1px solid var(--line-strong)',
+                      color: 'var(--accent-soft)',
+                      borderRadius: '2px',
                     }}
                   >
                     验证
                   </button>
                 </div>
 
-                {/* 错误提示 / 剩余次数 */}
                 <div className="mt-3 min-h-[20px]">
                   {captchaError ? (
-                    <div className="text-xs font-mono" style={{ color: '#f87171' }}>
+                    <div className="font-mono text-xs" style={{ color: '#f87171' }}>
                       ✗ 答案错误，还可尝试 {attemptsLeft} 次
                     </div>
                   ) : (
-                    <div className="text-xs font-mono" style={{ color: 'var(--text-muted)', opacity: 0.5 }}>
+                    <div className="font-mono text-xs" style={{ color: 'var(--text-muted)', opacity: 0.5 }}>
                       剩余 {attemptsLeft} 次尝试机会
                     </div>
                   )}
@@ -1137,13 +1104,19 @@ function RevealCard({ icon, label, masked, full, href, actionLabel }) {
   )
 }
 
-/* ==================== 页脚 ==================== */
+/* ==================== 页脚（蓝图审批章） ==================== */
 function Footer() {
   return (
-    <footer className="sci-footer py-8 text-center">
+    <footer className="sci-footer py-10 text-center">
       <div className="max-w-6xl mx-auto px-6">
-        <p className="text-xs tracking-wide" style={{ color: 'var(--text-muted)', opacity: 0.6 }}>
-          © {new Date().getFullYear()} 刘洋飞
+        <div className="mb-4">
+          <div className="blueprint-stamp">
+            <span className="stamp-ring">Approved</span>
+            <span>刘洋飞</span>
+          </div>
+        </div>
+        <p className="font-mono text-xs tracking-[0.2em]" style={{ color: 'var(--text-muted)', opacity: 0.7 }}>
+          © {new Date().getFullYear()} LIU YANG FEI · DWG NO. LYF-{new Date().getFullYear()}-001
         </p>
       </div>
     </footer>
@@ -1151,12 +1124,19 @@ function Footer() {
 }
 
 /* ==================== 通用组件: 区块标题 ==================== */
-function SectionTitle({ subtitle, title }) {
+function SectionTitle({ subtitle, title, index }) {
   return (
-    <div className="text-center mb-14">
-      <div className="sci-section-label">{subtitle}</div>
-      <h2 className="sci-section-title">{title}</h2>
-      <div className="sci-divider" />
+    <div className="sci-section-head">
+      <div className="flex items-start gap-4">
+        <span className="sci-section-index">SYS-{index}</span>
+        <div>
+          <div className="sci-section-label">{subtitle}</div>
+          <h2 className="sci-section-title">{title}</h2>
+        </div>
+      </div>
+      <div className="sci-dim-line">
+        <span className="dim-tick" />
+      </div>
     </div>
   )
 }
