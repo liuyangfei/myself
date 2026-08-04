@@ -635,10 +635,92 @@ function Contact() {
   )
 }
 
-/* ==================== 可揭示的联系卡片 ==================== */
+/* ==================== 验证码生成器 ==================== */
+function generateCaptcha() {
+  const patterns = [
+    // a × b + c
+    () => {
+      const a = rand(3, 9), b = rand(4, 12), c = rand(5, 20)
+      return { question: `${a} × ${b} + ${c} = ?`, answer: a * b + c }
+    },
+    // a × b - c
+    () => {
+      const a = rand(4, 11), b = rand(3, 8)
+      const max = a * b - 3
+      const c = rand(5, Math.max(6, max))
+      return { question: `${a} × ${b} − ${c} = ?`, answer: a * b - c }
+    },
+    // (a + b) × c
+    () => {
+      const a = rand(2, 9), b = rand(3, 8), c = rand(2, 7)
+      return { question: `(${a} + ${b}) × ${c} = ?`, answer: (a + b) * c }
+    },
+    // a × b + c × d
+    () => {
+      const a = rand(2, 7), b = rand(3, 8), c = rand(2, 6), d = rand(3, 7)
+      return { question: `${a} × ${b} + ${c} × ${d} = ?`, answer: a * b + c * d }
+    },
+    // a² + b × c
+    () => {
+      const a = rand(3, 9), b = rand(3, 8), c = rand(2, 7)
+      return { question: `${a}² + ${b} × ${c} = ?`, answer: a * a + b * c }
+    },
+  ]
+  return patterns[Math.floor(Math.random() * patterns.length)]()
+}
+
+function rand(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min
+}
+
+/* ==================== 可揭示的联系卡片（含验证码） ==================== */
 function RevealCard({ icon, label, masked, full, href, actionLabel }) {
   const [revealed, setRevealed] = useState(false)
   const [copied, setCopied] = useState(false)
+
+  // 验证码状态
+  const [showCaptcha, setShowCaptcha] = useState(false)
+  const [captcha, setCaptcha] = useState(null)
+  const [userAnswer, setUserAnswer] = useState('')
+  const [captchaError, setCaptchaError] = useState(false)
+
+  const handleCardClick = () => {
+    if (revealed) {
+      // 已揭示，点击重新隐藏
+      setRevealed(false)
+      setShowCaptcha(false)
+      setUserAnswer('')
+      setCaptchaError(false)
+      return
+    }
+    // 弹出验证码
+    setCaptcha(generateCaptcha())
+    setShowCaptcha(true)
+    setUserAnswer('')
+    setCaptchaError(false)
+  }
+
+  const handleVerify = (e) => {
+    e.stopPropagation()
+    const num = parseInt(userAnswer, 10)
+    if (num === captcha.answer) {
+      setShowCaptcha(false)
+      setRevealed(true)
+      setCaptchaError(false)
+      setUserAnswer('')
+    } else {
+      setCaptchaError(true)
+      setCaptcha(generateCaptcha())
+      setUserAnswer('')
+    }
+  }
+
+  const handleInputKey = (e) => {
+    if (e.key === 'Enter') {
+      handleVerify(e)
+    }
+    e.stopPropagation()
+  }
 
   const handleCopy = (e) => {
     e.stopPropagation()
@@ -650,11 +732,11 @@ function RevealCard({ icon, label, masked, full, href, actionLabel }) {
 
   return (
     <div
-      className="contact-card sci-card p-5 flex items-center gap-4 cursor-pointer select-none"
-      onClick={() => setRevealed(!revealed)}
+      className="contact-card sci-card p-5 flex items-center gap-4 cursor-pointer select-none relative overflow-visible"
+      onClick={handleCardClick}
       role="button"
       tabIndex={0}
-      onKeyDown={(e) => { if (e.key === 'Enter') setRevealed(!revealed) }}
+      onKeyDown={(e) => { if (e.key === 'Enter') handleCardClick() }}
     >
       <div className="w-10 h-10 rounded-lg flex items-center justify-center text-lg flex-shrink-0"
         style={{ background: 'rgba(45,212,191,0.06)', border: '1px solid rgba(45,212,191,0.1)' }}>
@@ -665,32 +747,28 @@ function RevealCard({ icon, label, masked, full, href, actionLabel }) {
         <div className="text-[10px] font-mono tracking-widest" style={{ color: 'var(--text-muted)' }}>
           {label}
         </div>
-        <div className="text-sm font-medium font-mono transition-all duration-300"
+        <div className={`text-sm font-medium font-mono transition-all duration-300 ${captchaError ? 'animate-shake' : ''}`}
           style={{ color: revealed ? 'var(--accent)' : 'var(--text-muted)' }}>
           {revealed ? full : masked}
         </div>
       </div>
 
-      {/* 操作区 */}
+      {/* 右侧操作区 */}
       <div className="flex items-center gap-1.5 flex-shrink-0">
-        {!revealed ? (
+        {!revealed && !showCaptcha && (
           <span className="text-xs font-mono tracking-wider"
             style={{ color: 'var(--text-muted)', opacity: 0.5 }}>
             点击查看
           </span>
-        ) : (
+        )}
+        {revealed && (
           <>
-            {/* 复制按钮 */}
-            <button
-              onClick={handleCopy}
-              className="flex items-center justify-center w-7 h-7 rounded-md transition-all"
+            <button onClick={handleCopy} className="w-7 h-7 flex items-center justify-center rounded-md transition-all"
               style={{
                 background: copied ? 'rgba(45,212,191,0.12)' : 'rgba(255,255,255,0.03)',
                 border: copied ? '1px solid rgba(45,212,191,0.2)' : '1px solid var(--border-subtle)',
                 color: copied ? 'var(--accent)' : 'var(--text-muted)',
-              }}
-              title="复制"
-            >
+              }} title="复制">
               {copied ? (
                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -701,18 +779,10 @@ function RevealCard({ icon, label, masked, full, href, actionLabel }) {
                 </svg>
               )}
             </button>
-            {/* 直达链接 */}
-            <a
-              href={href}
-              onClick={(e) => e.stopPropagation()}
-              className="flex items-center justify-center w-7 h-7 rounded-md transition-all"
-              style={{
-                background: 'rgba(255,255,255,0.03)',
-                border: '1px solid var(--border-subtle)',
-                color: 'var(--text-muted)',
-              }}
-              title={actionLabel}
-            >
+            <a href={href} onClick={(e) => e.stopPropagation()}
+              className="w-7 h-7 flex items-center justify-center rounded-md transition-all"
+              style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid var(--border-subtle)', color: 'var(--text-muted)' }}
+              title={actionLabel}>
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
               </svg>
@@ -720,6 +790,62 @@ function RevealCard({ icon, label, masked, full, href, actionLabel }) {
           </>
         )}
       </div>
+
+      {/* ===== 验证码浮层 ===== */}
+      {showCaptcha && captcha && (
+        <div
+          className="absolute inset-0 flex items-center justify-center z-10 rounded-[14px]"
+          style={{ background: 'rgba(8,8,12,0.95)', backdropFilter: 'blur(8px)' }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="text-center px-4">
+            <div className="text-[10px] font-mono tracking-widest mb-2"
+              style={{ color: 'var(--text-muted)' }}>
+              🤖 人机验证 · HUMAN VERIFICATION
+            </div>
+            <div className="text-xl font-bold font-mono tracking-wider mb-3"
+              style={{ color: 'var(--text-primary)', letterSpacing: '0.05em' }}>
+              {captcha.question}
+            </div>
+            <div className="flex items-center gap-2 justify-center">
+              <input
+                type="text"
+                inputMode="numeric"
+                value={userAnswer}
+                onChange={(e) => { setUserAnswer(e.target.value); setCaptchaError(false) }}
+                onKeyDown={handleInputKey}
+                autoFocus
+                placeholder="输入答案"
+                className="w-24 px-3 py-1.5 text-center text-sm font-mono rounded-md outline-none"
+                style={{
+                  background: 'rgba(255,255,255,0.04)',
+                  border: captchaError
+                    ? '1px solid #f87171'
+                    : '1px solid var(--border-strong)',
+                  color: captchaError ? '#f87171' : 'var(--text-primary)',
+                  transition: 'border-color 0.2s',
+                }}
+              />
+              <button
+                onClick={handleVerify}
+                className="px-3 py-1.5 text-xs font-mono font-semibold rounded-md transition-all"
+                style={{
+                  background: 'rgba(45,212,191,0.1)',
+                  border: '1px solid rgba(45,212,191,0.2)',
+                  color: 'var(--accent)',
+                }}
+              >
+                ↵
+              </button>
+            </div>
+            {captchaError && (
+              <div className="text-xs mt-2 font-mono animate-shake" style={{ color: '#f87171' }}>
+                ✗ 答案错误，请重试
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
