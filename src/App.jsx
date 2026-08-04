@@ -12,23 +12,28 @@ const NAV_ITEMS = [
 /* ========== 技能数据 ========== */
 const SKILL_CATEGORIES = [
   {
-    title: '🔧 后端开发',
+    title: '后端开发',
+    icon: '⬡',
     skills: ['Java', 'SpringBoot', 'SpringCloud', 'Grpc', 'Netty', 'DDD', 'ELK'],
   },
   {
-    title: '🎨 前端开发',
+    title: '前端开发',
+    icon: '◈',
     skills: ['React', 'Vue'],
   },
   {
-    title: '🗄️ 数据库 & 中间件',
+    title: '数据库 & 中间件',
+    icon: '◉',
     skills: ['MySQL', 'Redis', 'MongoDB', 'ShardingSphere', 'RabbitMQ', 'RocketMQ', 'CMQ', 'Kafka'],
   },
   {
-    title: '⚙️ DevOps & 运维',
+    title: 'DevOps & 运维',
+    icon: '⎔',
     skills: ['K8s', 'Docker', 'Nginx', 'Linux', 'Jenkins CI/CD', 'Git', 'Maven', 'Nacos', 'XxlJob'],
   },
   {
-    title: '🤖 AI & 新技术',
+    title: 'AI & 新技术',
+    icon: '⟡',
     skills: ['AI Coding', 'RAG', 'Agent', 'AI 应用开发'],
   },
 ]
@@ -165,37 +170,27 @@ const STATS = [
   { value: '350', unit: '%', label: '性能提升记录' },
 ]
 
+/* ==================== 根组件 ==================== */
 export default function App() {
   const [mobileOpen, setMobileOpen] = useState(false)
 
   return (
-    <div className="min-h-screen bg-white text-gray-800">
-      {/* ===== 导航栏 ===== */}
-      <Navbar mobileOpen={mobileOpen} onToggle={() => setMobileOpen(!mobileOpen)} />
+    <div className="min-h-screen bg-[#0a0a0f] text-[#e2e8f0]">
+      {/* 扫描线覆盖 */}
+      <div className="scanlines" />
 
-      {/* ===== Hero 区 ===== */}
-      <Hero />
-
-      {/* ===== 关于我 ===== */}
-      <About stats={STATS} />
-
-      {/* ===== 技能 ===== */}
-      <Skills categories={SKILL_CATEGORIES} />
-
-      {/* ===== 工作经历 ===== */}
-      <Experience experiences={EXPERIENCES} />
-
-      {/* ===== 项目 ===== */}
-      <Projects projects={PROJECTS} />
-
-      {/* ===== 教育背景 ===== */}
-      <Education />
-
-      {/* ===== 联系方式 ===== */}
-      <Contact />
-
-      {/* ===== 页脚 ===== */}
-      <Footer />
+      {/* 主内容 */}
+      <div className="sci-fi-root">
+        <Navbar mobileOpen={mobileOpen} onToggle={() => setMobileOpen(!mobileOpen)} />
+        <Hero />
+        <About stats={STATS} />
+        <Skills categories={SKILL_CATEGORIES} />
+        <Experience experiences={EXPERIENCES} />
+        <Projects projects={PROJECTS} />
+        <Education />
+        <Contact />
+        <Footer />
+      </div>
     </div>
   )
 }
@@ -203,18 +198,25 @@ export default function App() {
 /* ==================== 导航栏 ==================== */
 function Navbar({ mobileOpen, onToggle }) {
   return (
-    <nav className="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md border-b border-gray-100 z-50">
+    <nav className="sci-nav">
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-        <a href="#" className="text-xl font-bold gradient-text">LYF</a>
+        {/* Logo */}
+        <a href="#" className="flex items-center gap-3 group">
+          <span className="text-xl font-bold tracking-wider neon-text" style={{ color: 'var(--cyan)' }}>
+            LYF
+          </span>
+          <span className="hidden sm:inline text-xs px-2 py-0.5 rounded border font-mono"
+            style={{ color: 'var(--text-muted)', borderColor: 'var(--border-subtle)' }}>
+            SYS.ONLINE
+          </span>
+        </a>
 
         {/* 桌面导航 */}
-        <ul className="hidden md:flex gap-8 text-sm font-medium">
+        <ul className="hidden md:flex gap-8 text-sm">
           {NAV_ITEMS.map((item) => (
             <li key={item.href}>
-              <a
-                href={item.href}
-                className="text-gray-600 hover:text-blue-600 transition-colors"
-              >
+              <a href={item.href} className="sci-nav-link">
+                <span style={{ color: 'var(--text-muted)', marginRight: 6 }}>0{NAV_ITEMS.indexOf(item) + 1}</span>
                 {item.label}
               </a>
             </li>
@@ -222,11 +224,8 @@ function Navbar({ mobileOpen, onToggle }) {
         </ul>
 
         {/* 移动端菜单按钮 */}
-        <button
-          className="md:hidden p-2 text-gray-600"
-          onClick={onToggle}
-          aria-label="切换菜单"
-        >
+        <button className="md:hidden p-2" onClick={onToggle} aria-label="切换菜单"
+          style={{ color: 'var(--text-secondary)' }}>
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             {mobileOpen ? (
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -239,14 +238,14 @@ function Navbar({ mobileOpen, onToggle }) {
 
       {/* 移动端菜单 */}
       {mobileOpen && (
-        <div className="md:hidden bg-white border-b border-gray-100 px-6 pb-4">
-          {NAV_ITEMS.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              className="block py-2 text-gray-600 hover:text-blue-600"
-              onClick={() => setMobileOpen(false)}
-            >
+        <div className="md:hidden px-6 pb-4"
+          style={{ background: 'rgba(10,10,15,0.95)', borderBottom: '1px solid var(--border-subtle)' }}>
+          {NAV_ITEMS.map((item, i) => (
+            <a key={item.href} href={item.href} className="block py-3 sci-nav-link"
+              onClick={() => setMobileOpen(false)}>
+              <span style={{ color: 'var(--cyan)', marginRight: 8, fontFamily: 'monospace', fontSize: '0.8rem' }}>
+                [{String(i + 1).padStart(2, '0')}]
+              </span>
               {item.label}
             </a>
           ))}
@@ -256,52 +255,77 @@ function Navbar({ mobileOpen, onToggle }) {
   )
 }
 
-/* ==================== Hero 区 ==================== */
+/* ==================== Hero ==================== */
 function Hero() {
   return (
-    <section className="min-h-screen flex items-center justify-center gradient-bg pt-16">
-      <div className="max-w-4xl mx-auto px-6 py-20 text-center">
-        {/* 标签 */}
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-100 text-blue-700 text-sm font-medium mb-8 animate-fade-in">
-          <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
-          开放工作机会 — 期待新的挑战
+    <section className="relative min-h-screen flex items-center justify-center pt-16 overflow-hidden">
+      {/* 发光球体 */}
+      <div className="hero-glow" style={{
+        background: 'radial-gradient(circle, rgba(0,240,255,0.4) 0%, transparent 70%)',
+        top: '10%', left: '50%', transform: 'translate(-50%, 0)',
+      }} />
+      <div className="hero-glow" style={{
+        background: 'radial-gradient(circle, rgba(216,70,239,0.3) 0%, transparent 70%)',
+        top: '40%', left: '25%', animationDelay: '3s',
+      }} />
+
+      {/* 六边形装饰 */}
+      <div className="hex-decoration" style={{ top: '15%', right: '10%', opacity: 0.3 }} />
+      <div className="hex-decoration" style={{ bottom: '20%', left: '8%', opacity: 0.2, width: 80, height: 80 }} />
+
+      <div className="relative z-10 max-w-4xl mx-auto px-6 py-20 text-center">
+        {/* 状态标签 */}
+        <div className="animate-fade-in inline-flex items-center gap-3 px-5 py-2.5 rounded-full mb-10"
+          style={{ background: 'rgba(0,240,255,0.05)', border: '1px solid var(--border-subtle)' }}>
+          <div className="pulse-dot-green" />
+          <span className="text-sm font-medium tracking-wide" style={{ color: 'var(--green)' }}>
+            AVAILABLE FOR WORK
+          </span>
         </div>
 
         {/* 名字 */}
-        <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6 animate-fade-in">
-          你好，我是
+        <h1 className="animate-fade-in animate-delay-1 text-5xl md:text-7xl font-extrabold tracking-tight mb-8 leading-tight">
+          <span className="text-[#e2e8f0]">你好，我是</span>
           <br />
-          <span className="gradient-text">刘洋飞</span>
+          <span className="gradient-text neon-text">刘洋飞</span>
         </h1>
 
-        {/* 描述 */}
-        <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto mb-10 leading-relaxed animate-fade-in">
-          Java 高级开发工程师 · 12 年经验 · 全栈能力
-          <br />
-          专注高可用分布式系统、DDD 领域驱动设计、AI 应用开发
-        </p>
+        {/* 终端风格描述 */}
+        <div className="animate-fade-in animate-delay-2 max-w-2xl mx-auto mb-10">
+          <div className="inline-block text-left rounded-xl p-5"
+            style={{ background: 'rgba(0,0,0,0.4)', border: '1px solid var(--border-subtle)' }}>
+            <div className="flex items-center gap-2 mb-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', paddingBottom: 10 }}>
+              <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#ff5f57' }} />
+              <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#febc2e' }} />
+              <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#28c840' }} />
+              <span className="text-xs ml-3" style={{ color: 'var(--text-muted)', fontFamily: 'monospace' }}>terminal — liuyangfei@system</span>
+            </div>
+            <p className="font-mono text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+              <span style={{ color: 'var(--cyan)' }}>$ </span>
+              <span>Java 高级开发工程师 · 12 年经验</span>
+              <br />
+              <span style={{ color: 'var(--cyan)' }}>$ </span>
+              <span>专注高可用分布式系统 · DDD · AI 应用开发</span>
+              <span className="terminal-cursor" />
+            </p>
+          </div>
+        </div>
 
         {/* CTA 按钮 */}
-        <div className="flex flex-wrap justify-center gap-4 animate-fade-in">
-          <a
-            href="#contact"
-            className="px-8 py-3 bg-blue-600 text-white rounded-full font-medium hover:bg-blue-700 transition-colors shadow-lg shadow-blue-200"
-          >
-            联系我
+        <div className="animate-fade-in animate-delay-3 flex flex-wrap justify-center gap-4">
+          <a href="#contact" className="sci-btn-primary">
+            <span>⚡ 联系我</span>
           </a>
-          <a
-            href="#experience"
-            className="px-8 py-3 border border-gray-300 text-gray-700 rounded-full font-medium hover:border-blue-300 hover:text-blue-600 transition-colors"
-          >
-            查看经历
+          <a href="#experience" className="sci-btn-ghost">
+            查看经历 →
           </a>
         </div>
 
         {/* 向下箭头 */}
-        <div className="mt-16 animate-bounce">
-          <a href="#about" className="text-gray-400 hover:text-blue-500 transition-colors">
-            <svg className="w-6 h-6 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        <div className="animate-fade-in animate-delay-4 mt-16" style={{ animation: 'fadeInUp 0.7s ease forwards, bounce 2s ease-in-out 1s infinite' }}>
+          <a href="#about" className="inline-block" style={{ color: 'var(--text-muted)' }}>
+            <svg className="w-5 h-5 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
             </svg>
           </a>
         </div>
@@ -313,41 +337,53 @@ function Hero() {
 /* ==================== 关于我 ==================== */
 function About({ stats }) {
   return (
-    <section id="about" className="py-20 md:py-28 bg-white">
-      <div className="max-w-6xl mx-auto px-6">
+    <section id="about" className="relative py-20 md:py-28">
+      {/* 背景装饰 */}
+      <div className="hex-decoration" style={{ top: 40, right: 30, opacity: 0.15, width: 150, height: 150 }} />
+
+      <div className="max-w-6xl mx-auto px-6 relative z-10">
         <SectionTitle subtitle="ABOUT" title="关于我" />
 
         <div className="grid md:grid-cols-2 gap-12 items-center">
-          {/* 左侧文字 */}
-          <div>
-            <p className="text-gray-600 text-lg leading-relaxed mb-4">
-              一名拥有 <strong className="text-gray-900">12 年</strong> 经验的 Java 开发工程师，
-              具备从 <strong className="text-gray-900">0 到 1</strong> 构建大型 SaaS 平台的能力。
+          {/* 左侧文字卡片 */}
+          <div className="sci-card p-8">
+            <div className="flex items-center gap-3 mb-5">
+              <span className="text-2xl">🖥️</span>
+              <span className="font-mono text-xs tracking-widest" style={{ color: 'var(--cyan)' }}>
+                SYS.INFO // PROFILE
+              </span>
+            </div>
+            <p className="text-[#94a3b8] text-base leading-relaxed mb-4">
+              一名拥有 <strong style={{ color: 'var(--cyan)' }}>12 年</strong> 经验的 Java 开发工程师，
+              具备从 <strong style={{ color: 'var(--cyan)' }}>0 到 1</strong> 构建大型 SaaS 平台的能力。
             </p>
-            <p className="text-gray-600 text-lg leading-relaxed mb-4">
-              精通 <strong className="text-gray-900">SpringBoot / SpringCloud</strong> 微服务生态，
-              深度实践 <strong className="text-gray-900">DDD（领域驱动设计）</strong>，
+            <p className="text-[#94a3b8] text-base leading-relaxed mb-4">
+              精通 <strong style={{ color: 'var(--cyan)' }}>SpringBoot / SpringCloud</strong> 微服务生态，
+              深度实践 <strong style={{ color: 'var(--magenta)' }}>DDD（领域驱动设计）</strong>，
               在金融科技、SaaS 平台、高性能 SDK 等领域有丰富的实战经验。
             </p>
-            <p className="text-gray-600 text-lg leading-relaxed">
-              近期积极拥抱 <strong className="text-gray-900">AI 技术</strong>，
+            <p className="text-[#94a3b8] text-base leading-relaxed">
+              近期积极拥抱 <strong style={{ color: 'var(--purple)' }}>AI 技术</strong>，
               掌握 AI Coding、RAG、Agent 等 AI 应用开发技能，
               致力于将 AI 能力融入企业级软件开发流程。
             </p>
           </div>
 
           {/* 右侧统计 */}
-          <div className="grid grid-cols-2 gap-6">
-            {stats.map((stat) => (
-              <div
-                key={stat.label}
-                className="text-center p-6 rounded-2xl bg-gradient-to-br from-blue-50 to-purple-50 card-hover"
-              >
-                <div className="text-3xl md:text-4xl font-bold gradient-text">
+          <div className="grid grid-cols-2 gap-4">
+            {stats.map((stat, i) => (
+              <div key={stat.label} className="sci-card p-6 text-center group"
+                style={{ animationDelay: `${0.2 + i * 0.1}s` }}>
+                <div className="sci-stat-value">
                   {stat.value}
-                  <span className="text-lg text-gray-500 ml-1">{stat.unit}</span>
+                  <span className="text-lg ml-1" style={{ color: 'var(--text-muted)' }}>{stat.unit}</span>
                 </div>
-                <div className="text-sm text-gray-500 mt-2">{stat.label}</div>
+                <div className="text-xs mt-2 tracking-wide font-mono" style={{ color: 'var(--text-muted)' }}>
+                  {stat.label}
+                </div>
+                {/* 底部发光条 */}
+                <div className="mt-4 mx-auto w-0 h-0.5 rounded group-hover:w-full transition-all duration-500"
+                  style={{ background: 'var(--cyan)', boxShadow: '0 0 8px var(--cyan)' }} />
               </div>
             ))}
           </div>
@@ -360,20 +396,24 @@ function About({ stats }) {
 /* ==================== 技能 ==================== */
 function Skills({ categories }) {
   return (
-    <section id="skills" className="py-20 md:py-28 bg-gray-50">
-      <div className="max-w-6xl mx-auto px-6">
+    <section id="skills" className="relative py-20 md:py-28" style={{ background: 'var(--bg-surface)' }}>
+      {/* 装饰 */}
+      <div className="hex-decoration" style={{ bottom: 40, left: 20, opacity: 0.1, width: 100, height: 100 }} />
+
+      <div className="max-w-6xl mx-auto px-6 relative z-10">
         <SectionTitle subtitle="SKILLS" title="技术栈" />
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
           {categories.map((cat) => (
-            <div key={cat.title} className="bg-white rounded-2xl p-6 card-hover border border-gray-100">
-              <h3 className="text-lg font-semibold mb-4">{cat.title}</h3>
+            <div key={cat.title} className="skill-cat-card sci-card p-6">
+              <h3 className="text-base font-bold mb-4 flex items-center gap-2"
+                style={{ color: 'var(--text-primary)' }}>
+                <span style={{ color: 'var(--cyan)', fontSize: '1.2rem' }}>{cat.icon}</span>
+                {cat.title}
+              </h3>
               <div className="flex flex-wrap gap-2">
                 {cat.skills.map((skill) => (
-                  <span
-                    key={skill}
-                    className="skill-tag inline-block px-3 py-1.5 bg-gray-100 text-gray-700 text-sm rounded-lg hover:bg-blue-50 hover:text-blue-700 cursor-default"
-                  >
+                  <span key={skill} className="sci-chip">
                     {skill}
                   </span>
                 ))}
@@ -386,40 +426,67 @@ function Skills({ categories }) {
   )
 }
 
-/* ==================== 工作经历 ==================== */
+/* ==================== 工作经历: 科幻时间线 ==================== */
 function Experience({ experiences }) {
   return (
-    <section id="experience" className="py-20 md:py-28 bg-white">
-      <div className="max-w-6xl mx-auto px-6">
+    <section id="experience" className="relative py-20 md:py-28">
+      <div className="max-w-3xl mx-auto px-6 relative z-10">
         <SectionTitle subtitle="EXPERIENCE" title="工作经历" />
 
-        <div className="timeline-line pl-8 md:pl-0 md:ml-[calc(50%-1px)]">
+        <div className="sci-timeline pl-16">
           {experiences.map((exp, i) => (
-            <div
-              key={i}
-              className={`timeline-dot relative mb-10 pl-8 md:w-1/2 md:pl-0 ${
-                i % 2 === 0
-                  ? 'md:pr-12 md:text-right md:ml-[-50%]'
-                  : 'md:pl-12 md:ml-0'
-              }`}
-            >
+            <div key={i} className="relative mb-10 group">
+              {/* 时间线节点 */}
+              <div style={{
+                position: 'absolute',
+                left: -44,
+                top: 16,
+                width: 14,
+                height: 14,
+                borderRadius: '50%',
+                border: '2px solid var(--cyan)',
+                background: i === 0 ? 'var(--cyan)' : 'var(--bg-deep)',
+                boxShadow: i === 0 ? '0 0 16px var(--cyan), 0 0 32px rgba(0,240,255,0.3)' : '0 0 6px rgba(0,240,255,0.3)',
+                zIndex: 2,
+                transition: 'all 0.3s',
+              }} />
+              {/* 连接线到卡片 */}
+              <div style={{
+                position: 'absolute',
+                left: -37,
+                top: 23,
+                width: 30,
+                height: 1,
+                background: 'var(--border-subtle)',
+                transition: 'all 0.3s',
+              }}
+                className="group-hover:!bg-[var(--border-glow)]" />
+
               {/* 时间标签 */}
-              <span className="inline-block px-3 py-1 text-xs font-semibold text-blue-600 bg-blue-50 rounded-full mb-3">
+              <span className="inline-block px-3 py-1 text-xs font-semibold rounded-full mb-3 font-mono"
+                style={{
+                  color: 'var(--cyan)',
+                  background: 'rgba(0,240,255,0.08)',
+                  border: '1px solid var(--border-subtle)',
+                }}>
                 {exp.period}
               </span>
 
-              {/* 卡片 */}
-              <div className={`bg-white rounded-2xl p-6 border border-gray-100 card-hover ${
-                i % 2 === 0 ? 'md:text-right' : 'md:text-left'
-              }`}>
-                <h3 className="text-lg font-bold text-gray-900">{exp.role}</h3>
-                <p className="text-blue-600 font-medium text-sm mb-3">{exp.company}</p>
-                <ul className={`space-y-2 text-gray-600 text-sm leading-relaxed ${
-                  i % 2 === 0 ? 'md:text-right' : 'md:text-left'
-                }`}>
+              {/* 内容卡片 */}
+              <div className="sci-card p-6">
+                <h3 className="text-lg font-bold mb-1" style={{ color: 'var(--text-primary)' }}>
+                  {exp.role}
+                </h3>
+                <p className="text-sm font-medium mb-3" style={{ color: 'var(--magenta)' }}>
+                  ⬡ {exp.company}
+                </p>
+                <ul className="space-y-2.5">
                   {exp.highlights.map((h, j) => (
-                    <li key={j} className="flex items-start gap-2 md:justify-end">
-                      <span className="text-blue-400 mt-1 flex-shrink-0">•</span>
+                    <li key={j} className="flex items-start gap-3 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                      <span className="mt-1.5 flex-shrink-0" style={{
+                        width: 4, height: 4, borderRadius: '50%',
+                        background: 'var(--cyan)', boxShadow: '0 0 4px var(--cyan)',
+                      }} />
                       <span>{h}</span>
                     </li>
                   ))}
@@ -433,37 +500,59 @@ function Experience({ experiences }) {
   )
 }
 
-/* ==================== 项目 ==================== */
+/* ==================== 项目经验 ==================== */
 function Projects({ projects }) {
   return (
-    <section id="projects" className="py-20 md:py-28 bg-gray-50">
-      <div className="max-w-6xl mx-auto px-6">
+    <section id="projects" className="relative py-20 md:py-28" style={{ background: 'var(--bg-surface)' }}>
+      <div className="max-w-6xl mx-auto px-6 relative z-10">
         <SectionTitle subtitle="PROJECTS" title="项目经验" />
 
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-2 gap-5">
           {projects.map((proj) => (
-            <div key={proj.name} className="bg-white rounded-2xl p-6 border border-gray-100 card-hover flex flex-col">
-              <h3 className="text-lg font-bold text-gray-900 mb-1">{proj.name}</h3>
-              <p className="text-xs text-blue-600 font-medium mb-3">{proj.period}</p>
+            <div key={proj.name} className="sci-card p-6 flex flex-col">
+              {/* 标题 */}
+              <div className="flex items-start justify-between mb-1">
+                <h3 className="text-lg font-bold" style={{ color: 'var(--text-primary)' }}>
+                  {proj.name}
+                </h3>
+              </div>
+              <p className="text-xs font-mono mb-4" style={{ color: 'var(--cyan)' }}>
+                {proj.period}
+              </p>
+
+              {/* 技术标签 */}
               <div className="flex flex-wrap gap-1.5 mb-4">
                 {proj.tech.split('+').map((t) => (
-                  <span key={t} className="text-xs px-2 py-0.5 bg-gray-100 text-gray-500 rounded">
+                  <span key={t} className="text-xs px-2 py-1 rounded font-mono"
+                    style={{
+                      background: 'rgba(0,240,255,0.04)',
+                      border: '1px solid var(--border-subtle)',
+                      color: 'var(--text-muted)',
+                    }}>
                     {t.trim()}
                   </span>
                 ))}
               </div>
-              <ul className="space-y-2 text-sm text-gray-600 flex-1">
+
+              {/* 成果列表 */}
+              <ul className="space-y-2.5 flex-1">
                 {proj.achievements.map((a, j) => (
-                  <li key={j} className="flex items-start gap-2">
-                    <span className="text-green-400 mt-1 flex-shrink-0">
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  <li key={j} className="flex items-start gap-3 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                    <span className="mt-1 flex-shrink-0" style={{ color: 'var(--green)' }}>
+                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                       </svg>
                     </span>
                     <span>{a}</span>
                   </li>
                 ))}
               </ul>
+
+              {/* 底部闪烁线 */}
+              <div className="mt-4 h-px w-0 group-hover:w-full transition-all duration-700 mx-auto"
+                style={{ background: 'linear-gradient(90deg, transparent, var(--cyan), transparent)' }}
+                onMouseEnter={(e) => e.currentTarget.style.width = '100%'}
+              />
             </div>
           ))}
         </div>
@@ -475,14 +564,30 @@ function Projects({ projects }) {
 /* ==================== 教育背景 ==================== */
 function Education() {
   return (
-    <section className="py-20 md:py-28 bg-white">
-      <div className="max-w-6xl mx-auto px-6 text-center">
+    <section className="relative py-20 md:py-28">
+      <div className="max-w-6xl mx-auto px-6 text-center relative z-10">
         <SectionTitle subtitle="EDUCATION" title="教育背景" />
 
-        <div className="inline-block bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-8 border border-blue-100">
-          <div className="text-5xl mb-4">🎓</div>
-          <h3 className="text-xl font-bold text-gray-900 mb-2">本科学历</h3>
-          <p className="text-gray-500">2010.09 — 2014.07</p>
+        <div className="sci-card inline-block p-10 group">
+          {/* 装饰角 */}
+          <div style={{
+            position: 'absolute', top: 0, left: 0, width: 28, height: 28,
+            borderTop: '2px solid var(--border-glow)', borderLeft: '2px solid var(--border-glow)',
+            borderRadius: '16px 0 0 0', opacity: 0.5, transition: 'opacity 0.3s',
+          }}
+            className="group-hover:!opacity-100" />
+          <div style={{
+            position: 'absolute', bottom: 0, right: 0, width: 28, height: 28,
+            borderBottom: '2px solid var(--border-glow)', borderRight: '2px solid var(--border-glow)',
+            borderRadius: '0 0 16px 0', opacity: 0.5, transition: 'opacity 0.3s',
+          }}
+            className="group-hover:!opacity-100" />
+
+          <div className="text-5xl mb-5">🎓</div>
+          <h3 className="text-xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>本科学历</h3>
+          <p className="font-mono text-sm tracking-wide" style={{ color: 'var(--cyan)' }}>
+            2010.09 — 2014.07
+          </p>
         </div>
       </div>
     </section>
@@ -492,46 +597,58 @@ function Education() {
 /* ==================== 联系方式 ==================== */
 function Contact() {
   return (
-    <section id="contact" className="py-20 md:py-28 gradient-bg">
-      <div className="max-w-3xl mx-auto px-6 text-center">
+    <section id="contact" className="relative py-20 md:py-28 overflow-hidden">
+      {/* 背景发光 */}
+      <div className="hero-glow" style={{
+        background: 'radial-gradient(circle, rgba(0,240,255,0.2) 0%, transparent 70%)',
+        top: '30%', left: '50%', transform: 'translate(-50%, -50%)',
+      }} />
+
+      <div className="max-w-3xl mx-auto px-6 text-center relative z-10">
         <SectionTitle subtitle="CONTACT" title="联系我" />
 
-        <p className="text-gray-600 mb-10 text-lg">
+        <p className="text-[#94a3b8] mb-10 text-base">
           如果您对我的背景感兴趣，欢迎随时联系我！
         </p>
 
-        <div className="grid md:grid-cols-2 gap-6 mb-8">
+        <div className="grid md:grid-cols-2 gap-5 mb-8">
           {/* 邮箱 */}
-          <a
-            href="mailto:13823296947@139.com"
-            className="flex items-center gap-4 bg-white rounded-2xl p-6 card-hover border border-gray-100"
-          >
-            <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-2xl">
+          <a href="mailto:13823296947@139.com"
+            className="contact-card sci-card p-6 flex items-center gap-4 no-underline">
+            <div className="w-11 h-11 rounded-xl flex items-center justify-center text-xl"
+              style={{ background: 'rgba(0,240,255,0.1)', border: '1px solid var(--border-subtle)' }}>
               📧
             </div>
             <div className="text-left">
-              <div className="text-sm text-gray-500">邮箱</div>
-              <div className="text-gray-900 font-medium">13823296947@139.com</div>
+              <div className="text-xs font-mono tracking-wider" style={{ color: 'var(--text-muted)' }}>EMAIL</div>
+              <div className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
+                13823296947@139.com
+              </div>
             </div>
           </a>
 
           {/* 电话 */}
-          <div className="flex items-center gap-4 bg-white rounded-2xl p-6 card-hover border border-gray-100">
-            <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center text-2xl">
+          <div className="contact-card sci-card p-6 flex items-center gap-4">
+            <div className="w-11 h-11 rounded-xl flex items-center justify-center text-xl"
+              style={{ background: 'rgba(52,211,153,0.1)', border: '1px solid rgba(52,211,153,0.2)' }}>
               📱
             </div>
             <div className="text-left">
-              <div className="text-sm text-gray-500">电话</div>
-              <div className="text-gray-900 font-medium">13823296947</div>
+              <div className="text-xs font-mono tracking-wider" style={{ color: 'var(--text-muted)' }}>PHONE</div>
+              <div className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
+                13823296947
+              </div>
             </div>
           </div>
         </div>
 
         {/* 开放工作 */}
-        <div className="bg-white rounded-2xl p-6 border border-green-200 inline-block">
+        <div className="sci-card inline-block px-8 py-4" style={{ borderColor: 'rgba(52,211,153,0.2)' }}>
           <div className="flex items-center gap-3">
-            <span className="w-3 h-3 rounded-full bg-green-500 animate-pulse" />
-            <span className="text-gray-700 font-medium">目前开放工作机会，期待与您交流！</span>
+            <div className="pulse-dot-green" />
+            <span className="text-sm font-medium tracking-wide" style={{ color: 'var(--green)' }}>
+              目前开放工作机会，期待与您交流！
+            </span>
           </div>
         </div>
       </div>
@@ -542,23 +659,31 @@ function Contact() {
 /* ==================== 页脚 ==================== */
 function Footer() {
   return (
-    <footer className="py-8 bg-gray-900 text-gray-400 text-sm text-center">
+    <footer className="sci-footer py-8 text-center">
       <div className="max-w-6xl mx-auto px-6">
-        <p>© {new Date().getFullYear()} 刘洋飞. All rights reserved.</p>
+        <div className="flex items-center justify-center gap-2 mb-2">
+          <span style={{ color: 'var(--text-muted)', fontFamily: 'monospace', fontSize: '0.7rem' }}>
+            SYS_
+          </span>
+          <span style={{ color: 'var(--cyan)', fontFamily: 'monospace', fontSize: '0.7rem' }}>
+            OK
+          </span>
+        </div>
+        <p className="text-xs" style={{ color: 'var(--text-muted)', fontFamily: 'monospace' }}>
+          © {new Date().getFullYear()} 刘洋飞 · All systems operational
+        </p>
       </div>
     </footer>
   )
 }
 
-/* ==================== 通用组件: 标题 ==================== */
+/* ==================== 通用组件: 区块标题 ==================== */
 function SectionTitle({ subtitle, title }) {
   return (
     <div className="text-center mb-14">
-      <p className="text-xs font-semibold tracking-widest text-blue-500 uppercase mb-2">
-        {subtitle}
-      </p>
-      <h2 className="text-3xl md:text-4xl font-bold text-gray-900">{title}</h2>
-      <div className="w-16 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full mx-auto mt-4" />
+      <div className="sci-section-label">{subtitle}</div>
+      <h2 className="sci-section-title gradient-text">{title}</h2>
+      <div className="sci-divider mt-4" />
     </div>
   )
 }
