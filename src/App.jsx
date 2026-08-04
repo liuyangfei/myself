@@ -241,6 +241,7 @@ export default function App() {
         <Contact />
         <Footer />
         <BackToTop />
+        <MusicToggle />
       </div>
     </div>
   )
@@ -429,6 +430,220 @@ function BackToTop() {
       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
       </svg>
+    </button>
+  )
+}
+
+/* ==================== 科幻氛围音乐引擎 ====================
+   纯 Web Audio API 实时合成，无需音频文件：
+   背景 Pad（失谐锯齿波+低通）+ 空间琶音（三角波+回声延迟）+ 低音脉冲
+   和弦循环 Am9 → Fmaj9 → Cmaj9 → G6/9，科幻感 / 空灵 / 深邃
+============================================================ */
+const MIDI = (n) => 440 * Math.pow(2, (n - 69) / 12)
+
+class SciFiAudio {
+  static CHORDS = [
+    // 根音(低音) + 和弦音 + 琶音音池（高八度）
+    { bass: 45, tones: [48, 52, 55, 59], arp: [69, 72, 76, 71, 67, 72, 76, 71] }, // Am9
+    { bass: 41, tones: [45, 48, 52, 55], arp: [65, 69, 72, 76, 72, 69, 65, 69] }, // Fmaj9
+    { bass: 36, tones: [52, 55, 59, 62], arp: [64, 67, 71, 74, 72, 67, 71, 74] }, // Cmaj9
+    { bass: 43, tones: [47, 50, 52, 57], arp: [67, 71, 74, 76, 71, 67, 71, 74] }, // G6/9
+  ]
+  static STEP_DUR = 60 / 74 / 2 // 74 BPM 八分音符时长 ≈ 0.4s
+
+  constructor() {
+    this.ctx = null
+    this.master = null
+    this.delay = null
+    this.schedulerId = null
+    this.nextNoteTime = 0
+    this.step = 0
+    this.playing = false
+  }
+
+  init() {
+    if (this.ctx) return
+    const ctx = new (window.AudioContext || window.webkitAudioContext)()
+    this.ctx = ctx
+
+    // 主输出
+    const master = ctx.createGain()
+    master.gain.value = 0
+    master.connect(ctx.destination)
+    this.master = master
+
+    // 空间回声延迟
+    const delay = ctx.createDelay(2)
+    delay.delayTime.value = 0.42
+    const fb = ctx.createGain()
+    fb.gain.value = 0.42
+    const dlow = ctx.createBiquadFilter()
+    dlow.type = 'lowpass'
+    dlow.frequency.value = 2600
+    const dwet = ctx.createGain()
+    dwet.gain.value = 0.5
+    delay.connect(dlow)
+    dlow.connect(fb)
+    fb.connect(delay)
+    delay.connect(dwet)
+    dwet.connect(master)
+    this.delay = delay
+  }
+
+  start() {
+    if (!this.ctx) this.init()
+    const ctx = this.ctx
+    if (ctx.state === 'suspended') ctx.resume()
+    this.playing = true
+
+    // 主音量淡入
+    this.master.gain.cancelScheduledValues(ctx.currentTime)
+    this.master.gain.setValueAtTime(this.master.gain.value, ctx.currentTime)
+    this.master.gain.linearRampToValueAtTime(1, ctx.currentTime + 1.6)
+
+    if (this.schedulerId) return
+    this.nextNoteTime = ctx.currentTime + 0.1
+    this.step = 0
+    const spb = SciFiAudio.STEP_DUR
+    const tick = () => {
+      const ct = ctx.currentTime
+      // 后台切回时防止一次性补排大量音符
+      if (this.nextNoteTime < ct - 0.6) this.nextNoteTime = ct + 0.1
+      while (this.nextNoteTime < ct + 0.35) {
+        this.scheduleStep(this.step, this.nextNoteTime)
+        this.nextNoteTime += spb
+        this.step = (this.step + 1) % 32
+      }
+    }
+    tick()
+    this.schedulerId = setInterval(tick, 90)
+  }
+
+  stop() {
+    this.playing = false
+    if (!this.ctx || !this.master) return
+    const ctx = this.ctx
+    const t = ctx.currentTime
+    clearInterval(this.schedulerId)
+    this.schedulerId = null
+    // 主音量淡出后挂起上下文，释放 CPU
+    this.master.gain.cancelScheduledValues(t)
+    this.master.gain.setValueAtTime(this.master.gain.value, t)
+    this.master.gain.linearRampToValueAtTime(0, t + 0.8)
+    setTimeout(() => {
+      if (!this.playing && this.ctx && this.ctx.state === 'running') this.ctx.suspend()
+    }, 900)
+  }
+
+  scheduleStep(step, t) {
+    const chord = SciFiAudio.CHORDS[Math.floor(step / 8)]
+    const idx = step % 8
+    this.playArp(chord.arp[idx], t)
+    if (idx === 0) {
+      this.playPad(chord, t)
+      this.playBass(chord.bass, t)
+    }
+  }
+
+  // 背景 Pad：失谐锯齿波 + 低通滤波，缓慢起音/释音做交叉淡入
+  playPad(chord, t) {
+    const ctx = this.ctx
+    const dur = SciFiAudio.STEP_DUR * 8 + 2.2
+    const filter = ctx.createBiquadFilter()
+    filter.type = 'lowpass'
+    filter.Q.value = 0.3
+    filter.frequency.setValueAtTime(420, t)
+    filter.frequency.exponentialRampToValueAtTime(1500, t + dur - 2)
+    const g = ctx.createGain()
+    g.gain.setValueAtTime(0, t)
+    g.gain.linearRampToValueAtTime(0.014, t + 1.8)
+    g.gain.setValueAtTime(0.014, t + dur - 1.4)
+    g.gain.linearRampToValueAtTime(0.0001, t + dur)
+    filter.connect(g)
+    g.connect(this.master)
+    for (const n of chord.tones) {
+      for (const det of [-4, 5]) {
+        const o = ctx.createOscillator()
+        o.type = 'sawtooth'
+        o.frequency.value = MIDI(n)
+        o.detune.value = det
+        o.connect(filter)
+        o.start(t)
+        o.stop(t + dur + 0.1)
+      }
+    }
+  }
+
+  // 低音脉冲：根音正弦
+  playBass(n, t) {
+    const ctx = this.ctx
+    const dur = SciFiAudio.STEP_DUR * 8 + 0.2
+    const o = ctx.createOscillator()
+    o.type = 'sine'
+    o.frequency.value = MIDI(n)
+    const g = ctx.createGain()
+    g.gain.setValueAtTime(0, t)
+    g.gain.linearRampToValueAtTime(0.09, t + 0.05)
+    g.gain.setValueAtTime(0.09, t + dur - 1.2)
+    g.gain.linearRampToValueAtTime(0.0001, t + dur)
+    o.connect(g)
+    g.connect(this.master)
+    o.start(t)
+    o.stop(t + dur + 0.1)
+  }
+
+  // 空间琶音：三角波短促弹拨，送入回声延迟
+  playArp(n, t) {
+    const ctx = this.ctx
+    const o = ctx.createOscillator()
+    o.type = 'triangle'
+    o.frequency.value = MIDI(n)
+    const g = ctx.createGain()
+    g.gain.setValueAtTime(0, t)
+    g.gain.linearRampToValueAtTime(0.055, t + 0.012)
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.45)
+    o.connect(g)
+    g.connect(this.master)
+    g.connect(this.delay)
+    o.start(t)
+    o.stop(t + 0.5)
+  }
+}
+
+/* ==================== 氛围音乐开关 ==================== */
+function MusicToggle() {
+  const [playing, setPlaying] = useState(false)
+  const engineRef = useRef(null)
+
+  useEffect(() => () => {
+    engineRef.current?.stop()
+  }, [])
+
+  const toggle = () => {
+    if (playing) {
+      engineRef.current?.stop()
+      setPlaying(false)
+      return
+    }
+    if (!engineRef.current) engineRef.current = new SciFiAudio()
+    engineRef.current.start()
+    setPlaying(true)
+  }
+
+  return (
+    <button
+      onClick={toggle}
+      className={`music-toggle ${playing ? 'music-playing' : ''}`}
+      aria-label={playing ? '关闭氛围音乐' : '开启氛围音乐'}
+      title={playing ? '关闭氛围音乐' : '开启氛围音乐'}
+    >
+      {playing ? (
+        <span className="eq" aria-hidden="true"><i /><i /><i /></span>
+      ) : (
+        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 3v10.55A4 4 0 1 0 14 17V7h4V3h-6z" />
+        </svg>
+      )}
     </button>
   )
 }
